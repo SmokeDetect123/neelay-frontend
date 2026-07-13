@@ -2,30 +2,31 @@ import { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-interface PageContainerProps {
+interface SurfaceProps {
     children: ReactNode;
     className?: string;
 }
 
-export default function PageContainer({
+export default function Surface({
     children,
     className,
-}: PageContainerProps) {
+}: SurfaceProps) {
     return (
-        <div
+        <section
             className={cn(
                 `
-                mx-auto
-                w-full
-                max-w-7xl
-                space-y-8
-                px-8
-                py-8
+                rounded-2xl
+                border
+                border-slate-200
+                bg-white
+                shadow-sm
+                transition-all
+                duration-200
                 `,
                 className
             )}
         >
             {children}
-        </div>
+        </section>
     );
 }

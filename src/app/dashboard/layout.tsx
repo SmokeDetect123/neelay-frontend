@@ -1,17 +1,19 @@
 import { ReactNode } from "react";
 
-import ProtectedRoute from "@/components/layout/ProtectedRoute";
+import DashboardLayout from "@/components/layout/DashboardLayout";
 
 interface DashboardLayoutProps {
     children: ReactNode;
 }
 
-export default function DashboardLayout({
+export default function Layout({
     children,
 }: DashboardLayoutProps) {
     return (
-        <ProtectedRoute>
+        <DashboardLayout>
             {children}
-        </ProtectedRoute>
+        </DashboardLayout>
     );
 }
+
+//later on add <ProtectedRoute></ProtectedRoute>
