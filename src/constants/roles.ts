@@ -1,7 +1,11 @@
-export enum Role {
+export const ROLES = {
+    ADMIN: "ADMIN",
+    ENGINEER: "ENGINEER",
+} as const;
 
-    ADMIN = "ADMIN",
+export type Role =
+    (typeof ROLES)[keyof typeof ROLES];
 
-    EMPLOYEE = "EMPLOYEE"
-
-}
+export const ROLE_OPTIONS = Object.values(
+    ROLES
+);
