@@ -1,8 +1,13 @@
-export const ROUTES = {
+export const API_BASE_URL =
+    process.env.NEXT_PUBLIC_API_URL!;
 
-    LOGIN: "/login",
+export const API_ENDPOINTS = {
 
-    DASHBOARD: "/dashboard",
+    AUTH: {
+
+        LOGIN: "/auth/login",
+
+    },
 
     USERS: "/users",
 
