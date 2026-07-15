@@ -1,4 +1,4 @@
-import { Role } from "@/constants";
+import { Role } from "@/constants/roles";
 
 export interface LoginRequest {
   username: string;

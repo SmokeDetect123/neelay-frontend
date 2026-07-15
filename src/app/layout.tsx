@@ -4,55 +4,48 @@ import type { Metadata } from "next";
 
 import { Toaster } from "sonner";
 
+import ThemeProvider from "@/components/theme/ThemeProvider";
+
 import QueryProviders from "@/providers/QueryProviders";
 import AuthProviders from "@/providers/AuthProviders";
 
 export const metadata: Metadata = {
-
     title: "Neelay Service Report System",
-
     description: "Service Report Management",
-
 };
 
 export default function RootLayout({
-
     children,
-
 }: Readonly<{
-
     children: React.ReactNode;
-
 }>) {
-
     return (
-
-        <html lang="en">
-
+        <html
+            lang="en"
+            suppressHydrationWarning
+        >
             <body>
 
-                <QueryProviders>
+                <ThemeProvider>
 
-                    <AuthProviders>
+                    <QueryProviders>
 
-                        {children}
+                        <AuthProviders>
 
-                        <Toaster
+                            {children}
 
-                            richColors
+                            <Toaster
+                                richColors
+                                position="top-right"
+                            />
 
-                            position="top-right"
+                        </AuthProviders>
 
-                        />
+                    </QueryProviders>
 
-                    </AuthProviders>
-
-                </QueryProviders>
+                </ThemeProvider>
 
             </body>
-
         </html>
-
     );
-
 }

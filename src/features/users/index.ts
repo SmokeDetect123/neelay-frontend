@@ -1,1 +1,1 @@
-export * from "./api/usersApi";
+export * from "./api/users.api";

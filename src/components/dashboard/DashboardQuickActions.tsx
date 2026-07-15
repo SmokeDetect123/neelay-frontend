@@ -9,16 +9,30 @@ import QuickActionCard from "./QuickActionCard";
 
 export default function DashboardQuickActions() {
     return (
-        <section>
+        <section className="space-y-8">
 
-            <div className="mb-6">
+            <div className="space-y-2">
 
-                <h2 className="text-2xl font-semibold text-slate-900">
+                <h2
+                    className="
+                        text-3xl
+                        font-bold
+                        tracking-tight
+                        text-foreground
+                    "
+                >
                     Quick Actions
                 </h2>
 
-                <p className="mt-2 text-slate-500">
-                    Quickly navigate to the most frequently used modules.
+                <p
+                    className="
+                        max-w-3xl
+                        text-base
+                        text-muted-foreground
+                    "
+                >
+                    Access the most frequently used modules of the
+                    Neelay Service Report System.
                 </p>
 
             </div>
@@ -40,21 +54,21 @@ export default function DashboardQuickActions() {
 
                 <QuickActionCard
                     title="Service Reports"
-                    description="Create and manage service reports."
+                    description="Create, edit and review service reports."
                     href="/service-reports"
                     icon={FileText}
                 />
 
                 <QuickActionCard
                     title="Calibration Reports"
-                    description="Manage calibration reports."
+                    description="Manage calibration verification reports."
                     href="/calibration-reports"
                     icon={ClipboardCheck}
                 />
 
                 <QuickActionCard
                     title="Installation Reports"
-                    description="Manage installation reports."
+                    description="Create and manage installation reports."
                     href="/installation-reports"
                     icon={Wrench}
                 />

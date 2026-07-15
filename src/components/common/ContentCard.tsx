@@ -2,19 +2,19 @@ import { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-interface SurfaceProps {
+interface ContentCardProps {
     children: ReactNode;
     className?: string;
 }
 
-export default function Surface({
+export default function ContentCard({
     children,
     className,
-}: SurfaceProps) {
+}: ContentCardProps) {
     return (
         <section
             className={cn(
-                "rounded-3xl border border-border/60 bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-lg hover:border-primary/20",
+                "rounded-3xl border border-border/60 bg-card text-card-foreground shadow-sm transition-all duration-300",
                 className
             )}
         >
@@ -22,3 +22,4 @@ export default function Surface({
         </section>
     );
 }
+// easy to use justt type <content></content>
