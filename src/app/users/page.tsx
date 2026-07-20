@@ -1,4 +1,4 @@
-import PageContainer from "@/components/common/PageContainer";
+import { PageContainer } from "@/components/common/PageContainer";
 
 import UsersWorkspace from "@/features/users/components/UsersWorkspace";
 

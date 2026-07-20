@@ -1,6 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+
+import { ContentCard } from "@/components/common/ContentCard";
+
+import { useUsers } from "../hooks/useUsers";
 
 import UsersFilters from "./UsersFilters";
 import UsersSearch from "./UsersSearch";
@@ -9,11 +13,61 @@ import UsersToolbar from "./UsersToolbar";
 
 export default function UsersWorkspace() {
 
+    const {
+        users,
+        isLoading,
+        isError,
+    } = useUsers();
+
     const [search, setSearch] = useState("");
 
     const [role, setRole] = useState("ALL");
 
     const [status, setStatus] = useState("ALL");
+
+    const filteredUsers = useMemo(() => {
+
+        return users.filter((user) => {
+
+            const searchValue = search
+                .trim()
+                .toLowerCase();
+
+            const matchesSearch =
+                searchValue === "" ||
+                user.username
+                    .toLowerCase()
+                    .includes(searchValue) ||
+                user.fullName
+                    .toLowerCase()
+                    .includes(searchValue) ||
+                user.email
+                    .toLowerCase()
+                    .includes(searchValue);
+
+            const matchesRole =
+                role === "ALL" ||
+                user.role === role;
+
+            const matchesStatus =
+                status === "ALL" ||
+                (status === "ACTIVE" && user.active) ||
+                (status === "INACTIVE" && !user.active);
+
+            return (
+                matchesSearch &&
+                matchesRole &&
+                matchesStatus
+            );
+
+        });
+
+    }, [
+        users,
+        search,
+        role,
+        status,
+    ]);
 
     return (
 
@@ -21,27 +75,53 @@ export default function UsersWorkspace() {
 
             <UsersToolbar />
 
-            <div
-                className="
-                    flex
-                    flex-col
-                    gap-4
-                    rounded-2xl
-                    border
-                    border-slate-200
-                    bg-white
-                    p-6
-                    shadow-sm
-                    lg:flex-row
-                    lg:items-center
-                    lg:justify-between
-                "
-            >
-                
+            <ContentCard className="space-y-6 p-6">
 
-            </div>
+                <UsersSearch
+                    value={search}
+                    onChange={setSearch}
+                />
 
-            <UsersTable />
+                <UsersFilters
+                    role={role}
+                    status={status}
+                    onRoleChange={setRole}
+                    onStatusChange={setStatus}
+                />
+
+            </ContentCard>
+
+            {isLoading && (
+
+                <ContentCard className="flex h-72 items-center justify-center">
+
+                    <p className="text-sm text-muted-foreground">
+                        Loading users...
+                    </p>
+
+                </ContentCard>
+
+            )}
+
+            {isError && (
+
+                <ContentCard className="flex h-72 items-center justify-center">
+
+                    <p className="text-sm text-destructive">
+                        Unable to load users.
+                    </p>
+
+                </ContentCard>
+
+            )}
+
+            {!isLoading && !isError && (
+
+                <UsersTable
+                    users={filteredUsers}
+                />
+
+            )}
 
         </div>
 

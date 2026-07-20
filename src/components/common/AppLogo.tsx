@@ -27,23 +27,11 @@ export default function AppLogo({
 
             <div className="text-center">
 
-                <h1
-                    className="
-                        text-lg
-                        font-bold
-                        tracking-tight
-                        text-foreground
-                    "
-                >
+                <h1 className="text-lg font-bold tracking-tight text-foreground">
                     Neelay
                 </h1>
 
-                <p
-                    className="
-                        text-xs
-                        text-muted-foreground
-                    "
-                >
+                <p className="text-sm text-muted-foreground">
                     Service Report System
                 </p>
 

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { ArrowRight, LucideIcon } from "lucide-react";
 
-import Surface from "@/components/common/Surface";
+import { Surface } from "@/components/common/Surface";
 
 interface QuickActionCardProps {
     title: string;

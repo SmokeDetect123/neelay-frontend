@@ -7,18 +7,18 @@ interface SurfaceProps {
     className?: string;
 }
 
-export default function Surface({
+export function Surface({
     children,
     className,
 }: SurfaceProps) {
     return (
-        <section
+        <div
             className={cn(
-                "rounded-3xl border border-border/60 bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-lg hover:border-primary/20",
+                "rounded-xl bg-background",
                 className
             )}
         >
             {children}
-        </section>
+        </div>
     );
 }

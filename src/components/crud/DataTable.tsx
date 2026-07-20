@@ -7,7 +7,7 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 
-import ContentCard from "@/components/common/ContentCard";
+import {ContentCard} from "@/components/common/ContentCard";
 import EmptyState from "@/components/common/EmptyState";
 
 import {

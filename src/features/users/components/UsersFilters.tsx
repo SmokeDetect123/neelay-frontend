@@ -19,8 +19,8 @@ const ROLE_OPTIONS = [
         value: "ADMIN",
     },
     {
-        label: "Engineer",
-        value: "ENGINEER",
+        label: "Employee",
+        value: "EMPLOYEE",
     },
 ];
 

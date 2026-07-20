@@ -16,23 +16,8 @@ export default function EmptyState({
     return (
         <Surface className="p-12">
 
-            <div
-                className="
-                    flex
-                    flex-col
-                    items-center
-                    justify-center
-                    text-center
-                "
-            >
-                <div
-                    className="
-                        mb-5
-                        rounded-full
-                        bg-slate-100
-                        p-5
-                    "
-                >
+            <div className=" flex flex-col items-center justify-center text-center">
+                <div className=" mb-5 rounded-full bg-slate-100 p-5">
                     <Icon className="h-10 w-10 text-slate-400" />
                 </div>
 
@@ -40,15 +25,7 @@ export default function EmptyState({
                     {title}
                 </h3>
 
-                <p
-                    className="
-                        mt-3
-                        max-w-md
-                        text-sm
-                        leading-6
-                        text-slate-500
-                    "
-                >
+                <p className="mt-3 max-w-md text-sm leading-6 text-slate-500">
                     {description}
                 </p>
 

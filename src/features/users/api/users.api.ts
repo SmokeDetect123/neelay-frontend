@@ -1,17 +1,20 @@
-/*
-    Backend Integration Placeholder
+/**
+ * ============================================================
+ * Users API
+ * ------------------------------------------------------------
+ * Backend endpoint definitions.
+ * No HTTP implementation should live here.
+ * ============================================================
+ */
 
-    Future Endpoints
+export const USERS_API = {
+    LIST: "/users",
 
-    GET    /users
+    DETAILS: (id: number) => `/users/${id}`,
 
-    GET    /users/{id}
+    CREATE: "/users",
 
-    POST   /users
+    UPDATE: (id: number) => `/users/${id}`,
 
-    PUT    /users/{id}
-
-    DELETE /users/{id}
-*/
-
-export {};
+    DELETE: (id: number) => `/users/${id}`,
+} as const;

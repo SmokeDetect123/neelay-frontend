@@ -7,14 +7,14 @@ interface PageContainerProps {
     className?: string;
 }
 
-export default function PageContainer({
+export function PageContainer({
     children,
     className,
 }: PageContainerProps) {
     return (
         <main
             className={cn(
-                "mx-auto w-full max-w-[1600px] space-y-8 px-6 py-8 sm:px-8 lg:px-10 xl:px-12",
+                "flex flex-col gap-6 p-6",
                 className
             )}
         >

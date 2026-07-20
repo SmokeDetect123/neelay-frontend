@@ -13,38 +13,18 @@ export default function DashboardQuickActions() {
 
             <div className="space-y-2">
 
-                <h2
-                    className="
-                        text-3xl
-                        font-bold
-                        tracking-tight
-                        text-foreground
-                    "
-                >
+                <h2 className="text-3xl font-bold tracking-tight text-foreground">
                     Quick Actions
                 </h2>
 
-                <p
-                    className="
-                        max-w-3xl
-                        text-base
-                        text-muted-foreground
-                    "
-                >
+                <p className="max-w-3xl text-base text-muted-foreground">
                     Access the most frequently used modules of the
                     Neelay Service Report System.
                 </p>
 
             </div>
 
-            <div
-                className="
-                    grid
-                    gap-6
-                    md:grid-cols-2
-                    xl:grid-cols-4
-                "
-            >
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
                 <QuickActionCard
                     title="Users"
                     description="Manage users, engineers and administrators."

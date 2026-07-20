@@ -15,7 +15,6 @@ export default function SidebarItem({
     item,
     collapsed = false,
 }: SidebarItemProps) {
-
     const pathname = usePathname();
 
     const active =
@@ -28,56 +27,58 @@ export default function SidebarItem({
         <Link
             href={item.href}
             title={collapsed ? item.title : undefined}
+            aria-current={active ? "page" : undefined}
             className={cn(
-                "group relative flex items-center rounded-2xl transition-all duration-300",
+                "group relative flex h-12 items-center overflow-hidden rounded-xl transition-all duration-200 ease-out",
 
                 collapsed
-                    ? "justify-center px-0 py-3"
-                    : "gap-4 px-4 py-3",
+                    ? "justify-center"
+                    : "gap-3 px-4",
 
                 active
-                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
-                    : "text-muted-foreground hover:bg-primary/10 hover:text-primary"
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
             )}
         >
             {/* Active Indicator */}
 
-            {active && (
-                <div
-                    className="
-                        absolute
-                        left-0
-                        top-1/2
-                        h-8
-                        w-1
-                        -translate-y-1/2
-                        rounded-r-full
-                        bg-white
-                    "
-                />
-            )}
-
-            <Icon
+            <span
                 className={cn(
-                    "h-5 w-5 shrink-0 transition-all duration-300",
+                    "absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-primary-foreground transition-all duration-200",
 
                     active
-                        ? "text-white"
-                        : "text-slate-600 dark:text-slate-300 group-hover:text-primary"
+                        ? "opacity-100"
+                        : "opacity-0"
                 )}
             />
 
-            <span
-                className={cn(
-                    "overflow-hidden whitespace-nowrap font-medium transition-all duration-300",
+            {/* Icon */}
 
-                    collapsed
-                        ? "w-0 opacity-0"
-                        : "w-auto opacity-100"
+            <Icon
+                className={cn(
+                    "h-5 w-5 shrink-0 transition-all duration-200",
+
+                    active
+                        ? "scale-105 text-primary-foreground"
+                        : "text-muted-foreground group-hover:scale-105 group-hover:text-foreground"
                 )}
-            >
-                {item.title}
-            </span>
+            />
+
+            {/* Label */}
+
+            {!collapsed && (
+                <span
+                    className={cn(
+                        "truncate text-sm font-medium transition-colors duration-200",
+
+                        active
+                            ? "text-primary-foreground"
+                            : "text-foreground group-hover:text-foreground"
+                    )}
+                >
+                    {item.title}
+                </span>
+            )}
         </Link>
     );
 }

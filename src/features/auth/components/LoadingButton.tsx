@@ -17,25 +17,9 @@ export default function LoadingButton({
         <Button
             type="submit"
             disabled={loading}
-            className="
-                w-full
-                h-11
-                rounded-xl
-                bg-blue-700
-                hover:bg-blue-800
-                text-white
-                font-semibold
-            "
-        >
+            className="w-full h-11 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-semibold">
             {loading && (
-                <Loader2
-                    className="
-                        mr-2
-                        h-4
-                        w-4
-                        animate-spin
-                    "
-                />
+                <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
             )}
 
             {loading ? "Signing In..." : text}

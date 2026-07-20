@@ -2,7 +2,7 @@
 
 import { ShieldCheck } from "lucide-react";
 
-import Surface from "@/components/common/Surface";
+import { Surface } from "@/components/common/Surface";
 import { useAuthStore } from "@/store/auth.store";
 
 export default function DashboardWelcome() {

@@ -25,25 +25,13 @@ export default function Toolbar({
             <div className="space-y-1">
 
                 {title && (
-                    <h2
-                        className="
-                            text-2xl
-                            font-semibold
-                            tracking-tight
-                            text-foreground
-                        "
-                    >
+                    <h2 className="text-2xl font-semibold tracking-tight text-foreground">
                         {title}
                     </h2>
                 )}
 
                 {description && (
-                    <p
-                        className="
-                            text-sm
-                            text-muted-foreground
-                        "
-                    >
+                    <p className="text-sm text-muted-foreground">
                         {description}
                     </p>
                 )}
@@ -51,14 +39,7 @@ export default function Toolbar({
             </div>
 
             {actions && (
-                <div
-                    className="
-                        flex
-                        flex-wrap
-                        items-center
-                        gap-3
-                    "
-                >
+                <div className="flex flex-wrap items-center gap-3">
                     {actions}
                 </div>
             )}

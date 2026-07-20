@@ -12,38 +12,64 @@ export default function Sidebar() {
         (state) => state.sidebarCollapsed
     );
 
-    const navigation = NAVIGATION;
-
     return (
         <aside
-                className={cn("fixed inset-y-0 left-0 z-50 flex h-screen flex-col border-r border-border bg-card text-card-foreground shadow-lg transition-all duration-300 lg:relative",collapsed
-            ? "w-24"
-            : "w-72"
-                     )}
+            className={cn(
+                "sticky top-0 flex h-screen shrink-0 flex-col border-r border-border bg-card shadow-lg transition-all duration-300 ease-in-out",
+                collapsed ? "w-24" : "w-72"
+            )}
         >
-            {/* Logo */}
+            {/* ---------------------------------------------------------------- */}
+            {/* Brand */}
+            {/* ---------------------------------------------------------------- */}
 
             <div
                 className={cn(
-                    "border-b border-border transition-all duration-300",
-                    collapsed ? "px-3 py-6" : "px-6 py-8"
+                    "border-b border-border bg-card transition-all duration-300",
+                    collapsed ? "px-3 py-5" : "px-6 py-7"
                 )}
             >
-                <AppLogo
-                    className={cn(
-                        "transition-all duration-300",
-                        collapsed && "scale-90"
+                <div className="flex flex-col items-center">
+
+                    <AppLogo
+                        className={cn(
+                            "h-auto object-contain transition-all duration-300",
+                            collapsed
+                                ? "w-12"
+                                : "w-44"
+                        )}
+                    />
+
+                    {!collapsed && (
+                        <>
+                            <h2 className="mt-4 text-center text-lg font-semibold tracking-tight text-foreground">
+                                Neelay
+                            </h2>
+
+                            <p className="mt-1 text-center text-xs text-muted-foreground">
+                                Service Report System
+                            </p>
+                        </>
                     )}
-                />
+
+                </div>
             </div>
 
+            {/* ---------------------------------------------------------------- */}
             {/* Navigation */}
+            {/* ---------------------------------------------------------------- */}
 
             <nav className="flex-1 overflow-y-auto px-3 py-6">
 
-                <div className="flex flex-col gap-2">
+                {!collapsed && (
+                    <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                        Navigation
+                    </p>
+                )}
 
-                    {navigation.map((item) => (
+                <div className="space-y-2">
+
+                    {NAVIGATION.map((item) => (
                         <SidebarItem
                             key={item.href}
                             item={item}
@@ -55,26 +81,41 @@ export default function Sidebar() {
 
             </nav>
 
+            {/* ---------------------------------------------------------------- */}
             {/* Footer */}
+            {/* ---------------------------------------------------------------- */}
 
             <footer
                 className={cn(
-                    "border-t border-border transition-all duration-300",
-                    collapsed ? "px-2 py-5" : "px-6 py-5"
+                    "border-t border-border bg-card transition-all duration-300",
+                    collapsed
+                        ? "px-2 py-5"
+                        : "px-6 py-6"
                 )}
             >
                 {collapsed ? (
                     <div className="text-center text-xs font-semibold text-primary">
-                        v1
+                        v1.0
                     </div>
                 ) : (
-                    <div className="text-center text-xs text-muted-foreground">
-                        Neelay Service Report System
-                        <br />
-                        Version 1.0.0
+                    <div className="space-y-1 text-center">
+
+                        <p className="text-sm font-medium text-foreground">
+                            Neelay Service Report System
+                        </p>
+
+                        <p className="text-xs text-muted-foreground">
+                            Version 1.0.0
+                        </p>
+
+                        <p className="pt-1 text-[11px] text-muted-foreground">
+                            © 2026 All Rights Reserved
+                        </p>
+
                     </div>
                 )}
             </footer>
+
         </aside>
     );
 }

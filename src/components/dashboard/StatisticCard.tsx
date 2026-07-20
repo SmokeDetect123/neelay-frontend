@@ -1,6 +1,6 @@
 import { LucideIcon } from "lucide-react";
 
-import Surface from "@/components/common/Surface";
+import { Surface } from "@/components/common/Surface";
 import { cn } from "@/lib/utils";
 
 interface StatisticCardProps {
@@ -26,8 +26,7 @@ export default function StatisticCard({
             )}
         >
             {/* Decorative accent */}
-            <div
-                className="
+            <div className="
                     absolute
                     left-0
                     top-0
@@ -45,38 +44,16 @@ export default function StatisticCard({
                 {/* Left Section */}
                 <div className="flex-1 space-y-3">
 
-                    <p
-                        className="
-                            text-xs
-                            font-semibold
-                            uppercase
-                            tracking-[0.2em]
-                            text-muted-foreground
-                        "
-                    >
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                         {title}
                     </p>
 
-                    <h2
-                        className="
-                            text-4xl
-                            font-bold
-                            leading-none
-                            tracking-tight
-                            text-foreground
-                        "
-                    >
+                    <h2 className="text-4xl font-bold leading-none tracking-tight text-foreground">
                         {value}
                     </h2>
 
                     {description && (
-                        <p
-                            className="
-                                text-sm
-                                leading-6
-                                text-muted-foreground
-                            "
-                        >
+                        <p className="text-sm leading-6 text-muted-foreground">
                             {description}
                         </p>
                     )}
@@ -99,40 +76,13 @@ export default function StatisticCard({
             </div>
 
             {/* Bottom information */}
-            <div
-                className="
-                    mt-6
-                    flex
-                    items-center
-                    justify-between
-                    border-t
-                    border-border
-                    pt-4
-                "
-            >
-                <span
-                    className="
-                        text-xs
-                        font-medium
-                        text-muted-foreground
-                    "
-                >
+            <div className="mt-6 flex items-center justify-between border-t border-border pt-4">
+                <span className="text-xs font-medium text-muted-foreground">
                     Updated Today
                 </span>
 
                 <span
-                    className="
-                        rounded-full
-                        bg-emerald-100
-                        px-3
-                        py-1
-                        text-xs
-                        font-semibold
-                        text-emerald-700
-                        dark:bg-emerald-900/30
-                        dark:text-emerald-300
-                    "
-                >
+                    className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/30  dark:text-emerald-300">
                     Live
                 </span>
             </div>

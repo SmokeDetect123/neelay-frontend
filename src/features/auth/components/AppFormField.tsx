@@ -68,14 +68,7 @@ export default function AppFormField<T extends FieldValues>({
             ? "current-password"
             : "username"
     }
-    className="
-        h-11
-        rounded-xl
-        border-slate-300
-        focus:border-blue-600
-        focus:ring-blue-600
-    "
-/>
+    className="h-11 rounded-xl  border-slate-300  focus:border-blue-600  focus:ring-blue-600"/>
 
             {errors[name] && (
 

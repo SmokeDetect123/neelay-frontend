@@ -1,4 +1,4 @@
-import ContentCard from "@/components/common/ContentCard";
+import { ContentCard } from "@/components/common/ContentCard";
 
 export default function LoadingTable() {
     return (
@@ -14,17 +14,7 @@ export default function LoadingTable() {
 
                 {Array.from({ length: 8 }).map((_, index) => (
 
-                    <div
-                        key={index}
-                        className="
-                            flex
-                            items-center
-                            justify-between
-                            border-b
-                            px-6
-                            py-5
-                        "
-                    >
+                    <div key={index} className="flex items-center justify-between border-b px-6 py-5">
 
                         <div className="h-4 w-36 rounded bg-slate-200" />
 

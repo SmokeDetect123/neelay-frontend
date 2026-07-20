@@ -29,10 +29,7 @@ export default function LoginForm() {
     });
 
     return (
-        <form
-            onSubmit={handleSubmit(handleLogin)}
-            className="space-y-5"
-        >
+        <form onSubmit={handleSubmit(handleLogin)} className="space-y-5">
             <AppFormField
                 control={control}
                 errors={errors}

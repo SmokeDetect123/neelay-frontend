@@ -7,14 +7,14 @@ interface ContentCardProps {
     className?: string;
 }
 
-export default function ContentCard({
+export function ContentCard({
     children,
     className,
 }: ContentCardProps) {
     return (
         <section
             className={cn(
-                "rounded-3xl border border-border/60 bg-card text-card-foreground shadow-sm transition-all duration-300",
+                "rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-colors",
                 className
             )}
         >
@@ -22,4 +22,3 @@ export default function ContentCard({
         </section>
     );
 }
-// easy to use justt type <content></content>

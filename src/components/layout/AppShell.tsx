@@ -2,14 +2,17 @@
 
 import { ReactNode } from "react";
 
-import Sidebar from "./Sidebar";
+import AppContent from "./AppContent";
 import AppHeader from "./AppHeader";
+import Sidebar from "./Sidebar";
 
-export default function DashboardLayout({
-    children,
-}: {
+interface AppShellProps {
     children: ReactNode;
-}) {
+}
+
+export default function AppShell({
+    children,
+}: AppShellProps) {
     return (
         <div className="flex min-h-screen bg-background">
 
@@ -19,16 +22,11 @@ export default function DashboardLayout({
 
                 <AppHeader />
 
-                <main
-                    className="
-                        flex-1
-                        overflow-y-auto
-                        bg-background
-                        p-8
-                    "
-                >
+                <AppContent>
+
                     {children}
-                </main>
+
+                </AppContent>
 
             </div>
 

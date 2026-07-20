@@ -1,20 +1,32 @@
 "use client";
 
-import DataTable from "@/components/crud/DataTable";
+import DataTable from "@/components/table/DataTable";
 
-import { userColumns } from "./users.columns";
+import { usersColumns } from "../columns/users.columns";
 
-import { User } from "../types/user.types";
+import { UserResponse } from "../types/user.types";
 
-const users: User[] = [];
+interface UsersTableProps {
 
-export default function UsersTable() {
+    users: UserResponse[];
+
+}
+
+export default function UsersTable({
+
+    users,
+
+}: UsersTableProps) {
+
     return (
+
         <DataTable
-            columns={userColumns}
+            columns={usersColumns}
             data={users}
             emptyTitle="No Users Found"
-            emptyDescription="Create your first user to get started."
+            emptyDescription="There are no users matching your search."
         />
+
     );
+
 }
