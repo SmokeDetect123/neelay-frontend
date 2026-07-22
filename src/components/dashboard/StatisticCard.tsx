@@ -26,18 +26,7 @@ export default function StatisticCard({
             )}
         >
             {/* Decorative accent */}
-            <div className="
-                    absolute
-                    left-0
-                    top-0
-                    h-1
-                    w-full
-                    bg-gradient-to-r
-                    from-blue-600
-                    via-blue-500
-                    to-red-500
-                "
-            />
+            <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r  from-blue-600  via-blue-500  to-red-500"/>
 
             <div className="flex items-start justify-between gap-5">
 

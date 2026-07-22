@@ -2,11 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import serviceReportService from "../services/serviceReport.service";
+import { serviceReportService } from "../services/serviceReport.service";
 
 import type {
     CreateServiceReportRequest,
-    ReportStatus,
     ServiceReportResponse,
     UpdateServiceReportRequest,
 } from "../types/serviceReport.types";
@@ -14,26 +13,51 @@ import type {
 export function useServiceReports() {
     const [reports, setReports] = useState<ServiceReportResponse[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<string>();
 
-    // Initial load only
+    const loadReports = useCallback(
+        async (
+            signal?: AbortSignal,
+        ): Promise<ServiceReportResponse[]> => {
+            const data =
+                await serviceReportService.getServiceReports();
+
+            if (signal?.aborted) {
+                return [];
+            }
+
+            return data;
+        },
+        [],
+    );
+
     useEffect(() => {
-        let cancelled = false;
+        const controller = new AbortController();
 
         async function initialize() {
             try {
-                const data = await serviceReportService.getReports();
+                const data = await loadReports(
+                    controller.signal,
+                );
 
-                if (!cancelled) {
-                    setReports(data);
-                    setError(null);
+                if (controller.signal.aborted) {
+                    return;
                 }
-            } catch {
-                if (!cancelled) {
-                    setError("Failed to load service reports.");
+
+                setReports(data);
+                setError(undefined);
+            } catch (err) {
+                if (controller.signal.aborted) {
+                    return;
                 }
+
+                setError(
+                    err instanceof Error
+                        ? err.message
+                        : "Failed to load service reports.",
+                );
             } finally {
-                if (!cancelled) {
+                if (!controller.signal.aborted) {
                     setLoading(false);
                 }
             }
@@ -41,50 +65,47 @@ export function useServiceReports() {
 
         void initialize();
 
-        return () => {
-            cancelled = true;
-        };
-    }, []);
+        return () => controller.abort();
+    }, [loadReports]);
 
-    // Manual refresh
     const refresh = useCallback(async () => {
-        try {
-            setLoading(true);
+        setLoading(true);
 
-            const data = await serviceReportService.getReports();
+        try {
+            const data = await loadReports();
 
             setReports(data);
-            setError(null);
-        } catch {
-            setError("Failed to load service reports.");
+            setError(undefined);
+        } catch (err) {
+            setError(
+                err instanceof Error
+                    ? err.message
+                    : "Failed to load service reports.",
+            );
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [loadReports]);
 
-    const getReport = useCallback(async (id: number) => {
-        return serviceReportService.getReportById(id);
-    }, []);
-
-    const getReportsByStatus = useCallback(
-        async (status: ReportStatus) => {
-            return serviceReportService.getReportsByStatus(status);
+    const getServiceReportById = useCallback(
+        async (
+            id: number,
+        ): Promise<ServiceReportResponse | undefined> => {
+            return serviceReportService.getServiceReportById(
+                id,
+            );
         },
         [],
     );
 
-    const searchReports = useCallback(async (query: string) => {
-        return serviceReportService.searchReports(query);
-    }, []);
-
-    const getRecentReports = useCallback(async (limit?: number) => {
-        return serviceReportService.getRecentReports(limit);
-    }, []);
-
-    const createReport = useCallback(
-        async (request: CreateServiceReportRequest) => {
+    const createServiceReport = useCallback(
+        async (
+            request: CreateServiceReportRequest,
+        ): Promise<ServiceReportResponse> => {
             const report =
-                await serviceReportService.createReport(request);
+                await serviceReportService.createServiceReport(
+                    request,
+                );
 
             await refresh();
 
@@ -93,13 +114,13 @@ export function useServiceReports() {
         [refresh],
     );
 
-    const updateReport = useCallback(
+    const updateServiceReport = useCallback(
         async (
             id: number,
             request: UpdateServiceReportRequest,
-        ) => {
+        ): Promise<ServiceReportResponse> => {
             const report =
-                await serviceReportService.updateReport(
+                await serviceReportService.updateServiceReport(
                     id,
                     request,
                 );
@@ -111,16 +132,13 @@ export function useServiceReports() {
         [refresh],
     );
 
-    const deleteReport = useCallback(
-        async (id: number) => {
-            const deleted =
-                await serviceReportService.deleteReport(id);
+    const deleteServiceReport = useCallback(
+        async (id: number): Promise<void> => {
+            await serviceReportService.deleteServiceReport(
+                id,
+            );
 
-            if (deleted) {
-                await refresh();
-            }
-
-            return deleted;
+            await refresh();
         },
         [refresh],
     );
@@ -132,13 +150,12 @@ export function useServiceReports() {
 
         refresh,
 
-        getReport,
-        getReportsByStatus,
-        searchReports,
-        getRecentReports,
+        getServiceReportById,
 
-        createReport,
-        updateReport,
-        deleteReport,
+        createServiceReport,
+
+        updateServiceReport,
+
+        deleteServiceReport,
     };
 }

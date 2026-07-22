@@ -1,10 +1,25 @@
-import FormSection from "./FormSection";
+"use client";
+
+import { FormGrid } from "@/components/forms/FormGrid";
+import { FormSection } from "@/components/forms/FormSection";
+
+import ReportDateField from "../fields/ReportDateField";
+import EquipmentField from "../fields/EquipmentField";
+import SerialNumberField from "../fields/SerialNumberField";
 
 export default function EquipmentInformationSection() {
     return (
         <FormSection
             title="Equipment Information"
-            description="Provide the equipment details that were serviced."
-        />
+            description="Provide the equipment details for this service report."
+        >
+            <FormGrid>
+                <ReportDateField />
+
+                <EquipmentField />
+
+                <SerialNumberField />
+            </FormGrid>
+        </FormSection>
     );
 }

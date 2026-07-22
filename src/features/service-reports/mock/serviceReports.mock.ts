@@ -1,4 +1,4 @@
-import { ServiceReportResponse } from "../types/serviceReport.types";
+import type { ServiceReportResponse } from "../types/serviceReport.types";
 
 export const mockServiceReports: ServiceReportResponse[] = [
     {
@@ -6,35 +6,30 @@ export const mockServiceReports: ServiceReportResponse[] = [
         reportNumber: "SR-000001",
 
         customerId: 1,
-        customerName: "ABC Hospitals",
-        customerAddress: "Mumbai, Maharashtra",
+        customerName: "ABC Hospital",
+        customerAddress: "123 Main St, City",
 
-        attendedBy: 1,
-        attendedByName: "Rahul Sharma",
+        attendedBy: 2,
+        attendedByName: "John Smith",
 
-        reportDate: "2026-07-19",
+        reportDate: "2026-07-20",
 
-        equipment: "Medical Oxygen Manifold",
-        serialNumber: "MOM-1001",
+        equipment: "Oxygen Vaporizer",
+        serialNumber: "VP-2026-001",
 
         observations:
-            "Pressure fluctuation observed during inspection.",
+            "Leakage observed near the pressure regulator during inspection.",
 
         actionTaken:
-            "Adjusted pressure regulator and tested complete system.",
+            "Pressure regulator tightened and leakage test performed successfully.",
 
         recommendations:
-            "Monitor pressure readings for the next seven days.",
+            "Inspect regulator again during the next scheduled maintenance.",
 
-        customerSignatureUrl: "",
+        status: "OPEN",
 
-        engineerSignatureUrl: "",
-
-        status: "COMPLETED",
-
-        createdAt: "2026-07-19T10:30:00Z",
-
-        updatedAt: "2026-07-19T10:45:00Z",
+        createdAt: "2026-07-20T10:00:00Z",
+        updatedAt: "2026-07-20T10:00:00Z",
     },
 
     {
@@ -42,35 +37,30 @@ export const mockServiceReports: ServiceReportResponse[] = [
         reportNumber: "SR-000002",
 
         customerId: 2,
-        customerName: "Sunrise Multispeciality",
-        customerAddress: "Pune, Maharashtra",
+        customerName: "City Medical Centre",
+        customerAddress: "456 Wellness Ave, Healthtown",
 
-        attendedBy: 2,
-        attendedByName: "Ankit Patel",
+        attendedBy: 3,
+        attendedByName: "David Wilson",
 
         reportDate: "2026-07-18",
 
-        equipment: "Vacuum Pipeline",
-        serialNumber: "VP-2234",
+        equipment: "Nitrous Oxide Manifold",
+        serialNumber: "NM-45872",
 
         observations:
-            "Minor leakage detected near isolation valve.",
+            "Routine preventive maintenance completed.",
 
         actionTaken:
-            "Valve replaced and leakage test performed.",
+            "Filters cleaned, pressure checked, and alarm tested.",
 
         recommendations:
-            "Perform preventive maintenance every quarter.",
+            "Replace filter cartridge during next maintenance cycle.",
 
-        customerSignatureUrl: "",
+        status: "COMPLETED",
 
-        engineerSignatureUrl: "",
-
-        status: "IN_PROGRESS",
-
-        createdAt: "2026-07-18T09:20:00Z",
-
-        updatedAt: "2026-07-18T12:10:00Z",
+        createdAt: "2026-07-18T09:30:00Z",
+        updatedAt: "2026-07-18T11:00:00Z",
     },
 
     {
@@ -78,34 +68,29 @@ export const mockServiceReports: ServiceReportResponse[] = [
         reportNumber: "SR-000003",
 
         customerId: 3,
-        customerName: "City Care Hospital",
-        customerAddress: "Nashik, Maharashtra",
+        customerName: "Sunrise Hospital",
+        customerAddress: "789 Health Blvd, Wellness City",
 
-        attendedBy: 3,
-        attendedByName: "Vikas Singh",
+        attendedBy: 2,
+        attendedByName: "John Smith",
 
-        reportDate: "2026-07-17",
+        reportDate: "2026-07-15",
 
         equipment: "Medical Air Compressor",
-        serialNumber: "MAC-8712",
+        serialNumber: "MAC-98765",
 
         observations:
-            "Routine preventive maintenance completed.",
+            "Abnormal vibration detected while compressor was running.",
 
         actionTaken:
-            "Filters cleaned and compressor pressure verified.",
+            "Motor mounting bolts tightened and vibration reduced significantly.",
 
         recommendations:
-            "",
+            "Monitor vibration levels over the next month.",
 
-        customerSignatureUrl: "",
+        status: "IN_PROGRESS",
 
-        engineerSignatureUrl: "",
-
-        status: "OPEN",
-
-        createdAt: "2026-07-17T14:10:00Z",
-
-        updatedAt: "2026-07-17T14:10:00Z",
+        createdAt: "2026-07-15T08:45:00Z",
+        updatedAt: "2026-07-15T09:40:00Z",
     },
 ];

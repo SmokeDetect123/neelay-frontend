@@ -1,5 +1,5 @@
 import {
-    CalendarDays,
+    Building2,
     ClipboardCheck,
     FileText,
     LayoutDashboard,
@@ -10,25 +10,29 @@ import {
 import { Role, ROLES } from "./roles";
 
 export interface NavigationItem {
-
     title: string;
-
     href: string;
-
     icon: React.ComponentType<{
         className?: string;
     }>;
-
     roles: Role[];
-
 }
 
 export const NAVIGATION: NavigationItem[] = [
-
     {
         title: "Dashboard",
         href: "/dashboard",
         icon: LayoutDashboard,
+        roles: [
+            ROLES.ADMIN,
+            ROLES.ENGINEER,
+        ],
+    },
+
+    {
+        title: "Customers",
+        href: "/customers",
+        icon: Building2,
         roles: [
             ROLES.ADMIN,
             ROLES.ENGINEER,
@@ -73,5 +77,4 @@ export const NAVIGATION: NavigationItem[] = [
             ROLES.ENGINEER,
         ],
     },
-
 ];

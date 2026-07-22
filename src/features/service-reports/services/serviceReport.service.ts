@@ -4,73 +4,33 @@ import type {
     CreateServiceReportRequest,
     ServiceReportResponse,
     UpdateServiceReportRequest,
-    ReportStatus,
 } from "../types/serviceReport.types";
 
 class ServiceReportService {
-
-    async getReports(): Promise<ServiceReportResponse[]> {
-        return Promise.resolve([...mockServiceReports]);
+    async getServiceReports(): Promise<ServiceReportResponse[]> {
+        return [...mockServiceReports];
     }
 
-    async getReportById(
+    async getServiceReportById(
         id: number,
     ): Promise<ServiceReportResponse | undefined> {
-
-        return Promise.resolve(
-            mockServiceReports.find(report => report.id === id),
+        return mockServiceReports.find(
+            (report) => report.id === id,
         );
     }
 
-    async getReportsByStatus(
-        status: ReportStatus,
-    ): Promise<ServiceReportResponse[]> {
-
-        return Promise.resolve(
-            mockServiceReports.filter(
-                report => report.status === status,
-            ),
-        );
-    }
-
-    async searchReports(
-        query: string,
-    ): Promise<ServiceReportResponse[]> {
-
-        const search = query.toLowerCase();
-
-        return Promise.resolve(
-            mockServiceReports.filter(report =>
-                report.reportNumber.toLowerCase().includes(search) ||
-                report.customerName.toLowerCase().includes(search) ||
-                report.equipment.toLowerCase().includes(search) ||
-                report.serialNumber.toLowerCase().includes(search),
-            ),
-        );
-    }
-
-    async getRecentReports(
-        limit = 5,
-    ): Promise<ServiceReportResponse[]> {
-
-        return Promise.resolve(
-            [...mockServiceReports]
-                .sort(
-                    (a, b) =>
-                        new Date(b.reportDate).getTime() -
-                        new Date(a.reportDate).getTime(),
-                )
-                .slice(0, limit),
-        );
-    }
-
-    async createReport(
+    async createServiceReport(
         request: CreateServiceReportRequest,
     ): Promise<ServiceReportResponse> {
-
-        const newReport: ServiceReportResponse = {
-
-            id: mockServiceReports.length + 1,
+        const report: ServiceReportResponse = {
+            id:
+                mockServiceReports.length > 0
+                    ? Math.max(
+                          ...mockServiceReports.map(
+                              (report) => report.id,
+                          ),
+                      ) + 1
+                    : 1,
 
             reportNumber: `SR-${String(
                 mockServiceReports.length + 1,
@@ -78,24 +38,21 @@ class ServiceReportService {
 
             customerId: request.customerId,
 
+            // Temporary values.
+            // These will come from the backend later.
             customerName: "Unknown Customer",
-
             customerAddress: "",
 
             attendedBy: request.attendedBy,
-
             attendedByName: "Unknown Engineer",
 
             reportDate: request.reportDate,
 
             equipment: request.equipment,
-
             serialNumber: request.serialNumber,
 
             observations: request.observations,
-
             actionTaken: request.actionTaken,
-
             recommendations: request.recommendations,
 
             customerSignatureUrl:
@@ -107,56 +64,77 @@ class ServiceReportService {
             status: "OPEN",
 
             createdAt: new Date().toISOString(),
-
             updatedAt: new Date().toISOString(),
         };
 
-        mockServiceReports.push(newReport);
+        mockServiceReports.push(report);
 
-        return Promise.resolve(newReport);
+        return report;
     }
 
-    async updateReport(
+    async updateServiceReport(
         id: number,
         request: UpdateServiceReportRequest,
-    ): Promise<ServiceReportResponse | undefined> {
-
+    ): Promise<ServiceReportResponse> {
         const report = mockServiceReports.find(
-            r => r.id === id,
+            (item) => item.id === id,
         );
 
         if (!report) {
-            return undefined;
+            throw new Error(
+                "Service Report not found.",
+            );
         }
 
-        Object.assign(report, {
+    
 
-            ...request,
+        report.customerId = request.customerId;
 
-            updatedAt: new Date().toISOString(),
-        });
+        report.reportDate = request.reportDate;
 
-        return Promise.resolve(report);
+        report.attendedBy = request.attendedBy;
+
+        report.equipment = request.equipment;
+
+        report.serialNumber =
+            request.serialNumber;
+
+        report.observations =
+            request.observations;
+
+        report.actionTaken =
+            request.actionTaken;
+
+        report.recommendations =
+            request.recommendations;
+
+        report.customerSignatureUrl =
+            request.customerSignatureUrl;
+
+        report.engineerSignatureUrl =
+            request.engineerSignatureUrl;
+
+        report.updatedAt =
+            new Date().toISOString();
+
+        return report;
     }
-
-    async deleteReport(
+    async deleteServiceReport(
         id: number,
-    ): Promise<boolean> {
-
+    ): Promise<void> {
         const index = mockServiceReports.findIndex(
-            report => report.id === id,
+            (report) => report.id === id,
         );
 
         if (index === -1) {
-            return false;
+            throw new Error(
+                "Service Report not found.",
+            );
         }
 
         mockServiceReports.splice(index, 1);
-
-        return true;
     }
 }
 
-const serviceReportService = new ServiceReportService();
-
-export default serviceReportService;
+export const serviceReportService =
+    new ServiceReportService();

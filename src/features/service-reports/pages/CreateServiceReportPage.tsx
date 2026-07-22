@@ -29,7 +29,9 @@ export default function CreateServiceReportPage() {
                 }
             />
 
-            <ServiceReportForm />
+            <ServiceReportForm 
+                mode="create"
+            />
         </PageContainer>
     );
 }
