@@ -1,4 +1,6 @@
-import { UserResponse } from "../types/user.types";
+import type {
+    UserResponse,
+} from "../types/user.types";
 
 export const mockUsers: UserResponse[] = [
     {
@@ -8,29 +10,32 @@ export const mockUsers: UserResponse[] = [
         email: "admin@neelay.com",
         role: "ADMIN",
         active: true,
-        createdAt: "2026-07-01T09:00:00",
-        updatedAt: "2026-07-01T09:00:00",
+        createdAt: "2026-07-01T09:00:00Z",
+        updatedAt: "2026-07-01T09:00:00Z",
     },
+
     {
         id: 2,
-        username: "rahul.patil",
-        fullName: "Rahul Patil",
-        email: "rahul@neelay.com",
+        username: "john.smith",
+        fullName: "John Smith",
+        email: "john.smith@company.com",
         role: "ENGINEER",
         active: true,
-        createdAt: "2026-07-02T10:30:00",
-        updatedAt: "2026-07-02T10:30:00",
+        createdAt: "2026-07-02T10:30:00Z",
+        updatedAt: "2026-07-02T10:30:00Z",
     },
+
     {
         id: 3,
-        username: "sneha.shah",
-        fullName: "Sneha Shah",
-        email: "sneha@neelay.com",
+        username: "david.wilson",
+        fullName: "David Wilson",
+        email: "david.wilson@company.com",
         role: "ENGINEER",
         active: true,
-        createdAt: "2026-07-03T08:45:00",
-        updatedAt: "2026-07-03T08:45:00",
+        createdAt: "2026-07-03T08:45:00Z",
+        updatedAt: "2026-07-03T08:45:00Z",
     },
+
     {
         id: 4,
         username: "amit.kulkarni",
@@ -38,9 +43,10 @@ export const mockUsers: UserResponse[] = [
         email: "amit@neelay.com",
         role: "ENGINEER",
         active: false,
-        createdAt: "2026-07-04T11:20:00",
-        updatedAt: "2026-07-04T11:20:00",
+        createdAt: "2026-07-04T11:20:00Z",
+        updatedAt: "2026-07-04T11:20:00Z",
     },
+
     {
         id: 5,
         username: "operations",
@@ -48,9 +54,10 @@ export const mockUsers: UserResponse[] = [
         email: "ops@neelay.com",
         role: "ADMIN",
         active: true,
-        createdAt: "2026-07-05T09:15:00",
-        updatedAt: "2026-07-05T09:15:00",
+        createdAt: "2026-07-05T09:15:00Z",
+        updatedAt: "2026-07-05T09:15:00Z",
     },
+
     {
         id: 6,
         username: "priya.desai",
@@ -58,27 +65,7 @@ export const mockUsers: UserResponse[] = [
         email: "priya@neelay.com",
         role: "ENGINEER",
         active: true,
-        createdAt: "2026-07-06T14:10:00",
-        updatedAt: "2026-07-06T14:10:00",
-    },
-    {
-        id: 7,
-        username: "nikhil.joshi",
-        fullName: "Nikhil Joshi",
-        email: "nikhil@neelay.com",
-        role: "ENGINEER",
-        active: false,
-        createdAt: "2026-07-07T15:40:00",
-        updatedAt: "2026-07-07T15:40:00",
-    },
-    {
-        id: 8,
-        username: "rohan.naik",
-        fullName: "Rohan Naik",
-        email: "rohan@neelay.com",
-        role: "ENGINEER",
-        active: true,
-        createdAt: "2026-07-08T16:00:00",
-        updatedAt: "2026-07-08T16:00:00",
+        createdAt: "2026-07-06T10:00:00Z",
+        updatedAt: "2026-07-06T10:00:00Z",
     },
 ];

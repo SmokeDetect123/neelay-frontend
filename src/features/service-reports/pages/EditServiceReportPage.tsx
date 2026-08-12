@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
@@ -15,9 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 import ServiceReportForm from "../components/ServiceReportForm";
-import { useServiceReports } from "../hooks/useServiceReports";
 
-import type { ServiceReportResponse } from "../types/serviceReport.types";
+import { useServiceReport } from "../hooks/useServiceReport";
 
 export default function EditServiceReportPage() {
     const params = useParams();
@@ -26,81 +23,18 @@ export default function EditServiceReportPage() {
         ? params.id[0]
         : params.id;
 
-    const reportId = useMemo(() => {
-        if (!rawId) {
-            return null;
-        }
+    const reportId =
+        rawId && /^\d+$/.test(rawId)
+            ? Number(rawId)
+            : null;
 
-        if (!/^\d+$/.test(rawId)) {
-            return null;
-        }
+    const {
+        report,
+        isLoading,
+        error,
+    } = useServiceReport(reportId);
 
-        const parsed = Number(rawId);
-
-        if (!Number.isSafeInteger(parsed)) {
-            return null;
-        }
-
-        if (parsed <= 0) {
-            return null;
-        }
-
-        return parsed;
-    }, [rawId]);
-
-    const { getServiceReportById } =
-        useServiceReports();
-
-    const [report, setReport] =
-        useState<ServiceReportResponse>();
-
-    const [loading, setLoading] =
-        useState(true);
-
-    const [error, setError] =
-        useState<string>();
-
-    useEffect(() => {
-        async function loadReport() {
-            if (reportId === null) {
-                setError("Invalid Service Report ID.");
-                setLoading(false);
-                return;
-            }
-
-            try {
-                setLoading(true);
-                setError(undefined);
-
-                const data =
-                    await getServiceReportById(
-                        reportId,
-                    );
-
-                if (!data) {
-                    throw new Error(
-                        "Service Report not found.",
-                    );
-                }
-
-                setReport(data);
-            } catch (err) {
-                setReport(undefined);
-
-                setError(
-                    err instanceof Error
-                        ? err.message
-                        : "Failed to load Service Report.",
-                );
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        void loadReport();
-    }, [reportId, getServiceReportById]);
-
-    if (loading) {
+    if (isLoading) {
         return (
             <Card className="flex min-h-[320px] flex-col items-center justify-center gap-4">
                 <Loader2 className="h-10 w-10 animate-spin text-primary" />
@@ -118,7 +52,7 @@ export default function EditServiceReportPage() {
         );
     }
 
-    if (error) {
+    if (error || !report) {
         return (
             <Card className="flex min-h-[320px] flex-col items-center justify-center gap-5 p-8">
                 <AlertCircle className="h-12 w-12 text-destructive" />
@@ -129,7 +63,8 @@ export default function EditServiceReportPage() {
                     </h2>
 
                     <p className="text-muted-foreground">
-                        {error}
+                        {error ??
+                            "Service Report not found."}
                     </p>
                 </div>
 
@@ -141,10 +76,6 @@ export default function EditServiceReportPage() {
                 </Button>
             </Card>
         );
-    }
-
-    if (!report) {
-        return null;
     }
 
     return (

@@ -4,16 +4,26 @@ import { useEffect } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { FormProvider, useForm } from "react-hook-form";
+import {
+    FormProvider,
+    useForm,
+} from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { toast } from "sonner";
 
 import { useServiceReports } from "../hooks/useServiceReports";
+
 import { serviceReportSchema } from "../schemas/serviceReport.schema";
 
-import type { ServiceReportFormValues } from "../types/serviceReportForm.types";
-import type { ServiceReportFormProps } from "../types/serviceReportFormProps";
+import type {
+    ServiceReportFormValues,
+} from "../types/serviceReportForm.types";
+
+import type {
+    ServiceReportFormProps,
+} from "../types/serviceReportFormProps";
 
 import CustomerInformationSection from "./form-sections/CustomerInformationSection";
 import EngineerInformationSection from "./form-sections/EngineerInformationSection";
@@ -33,19 +43,32 @@ export default function ServiceReportForm({
     } = useServiceReports();
 
     const form = useForm<ServiceReportFormValues>({
-        resolver: zodResolver(serviceReportSchema),
+        resolver: zodResolver(
+            serviceReportSchema,
+        ),
+
         mode: "onSubmit",
+
         reValidateMode: "onChange",
 
         defaultValues: {
             customerId: 0,
+
             attendedBy: 0,
+
             reportDate:
-                new Date().toISOString().split("T")[0],
+                new Date()
+                    .toISOString()
+                    .split("T")[0],
+
             equipment: "",
+
             serialNumber: "",
+
             observations: "",
+
             actionTaken: "",
+
             recommendations: "",
         },
     });
@@ -54,72 +77,88 @@ export default function ServiceReportForm({
         handleSubmit,
         reset,
         setFocus,
+
         formState: {
             errors,
-            isSubmitting,
-            isDirty,
         },
     } = form;
 
+    /*
+     * Populate the form when editing an
+     * existing service report.
+     *
+     * The report is loaded asynchronously by
+     * EditServiceReportPage, so defaultValues
+     * cannot be used for the loaded report.
+     *
+     * React Hook Form must therefore be
+     * explicitly reset with the report data.
+     */
     useEffect(() => {
-        if (mode !== "edit" || !report) {
+        if (
+            mode !== "edit" ||
+            !report
+        ) {
             return;
         }
 
         reset({
-            customerId: report.customerId,
-            attendedBy: report.attendedBy,
-            reportDate: report.reportDate,
-            equipment: report.equipment,
-            serialNumber: report.serialNumber,
-            observations: report.observations,
-            actionTaken: report.actionTaken,
-            recommendations: report.recommendations,
-        });
-    }, [mode, report, reset]);
+            customerId:
+                report.customerId,
 
+            attendedBy:
+                report.attendedBy,
+
+            reportDate:
+                report.reportDate,
+
+            equipment:
+                report.equipment,
+
+            serialNumber:
+                report.serialNumber,
+
+            observations:
+                report.observations,
+
+            actionTaken:
+                report.actionTaken,
+
+            recommendations:
+                report.recommendations,
+        });
+    }, [
+        mode,
+        report,
+        reset,
+    ]);
+
+    /*
+     * Focus the first invalid field after
+     * validation.
+     */
     useEffect(() => {
-        const firstError = Object.keys(errors)[0];
+        const firstError =
+            Object.keys(errors)[0];
 
         if (firstError) {
             setFocus(
                 firstError as keyof ServiceReportFormValues,
             );
         }
-    }, [errors, setFocus]);
-
-    useEffect(() => {
-        const handleBeforeUnload = (
-            event: BeforeUnloadEvent,
-        ) => {
-            if (!isDirty || isSubmitting) {
-                return;
-            }
-
-            event.preventDefault();
-
-            event.returnValue = "";
-        };
-
-        window.addEventListener(
-            "beforeunload",
-            handleBeforeUnload,
-        );
-
-        return () => {
-            window.removeEventListener(
-                "beforeunload",
-                handleBeforeUnload,
-            );
-        };
-    }, [isDirty, isSubmitting]);
+    }, [
+        errors,
+        setFocus,
+    ]);
 
     const onSubmit = async (
         data: ServiceReportFormValues,
     ) => {
         try {
             if (mode === "create") {
-                await createServiceReport(data);
+                await createServiceReport(
+                    data,
+                );
 
                 toast.success(
                     "Service Report created successfully.",
@@ -143,9 +182,14 @@ export default function ServiceReportForm({
 
             reset();
 
-            router.push("/service-reports");
+            router.push(
+                "/service-reports",
+            );
         } catch (error) {
-            console.error(error);
+            console.error(
+                "Service Report submission failed:",
+                error,
+            );
 
             toast.error(
                 error instanceof Error
@@ -160,7 +204,9 @@ export default function ServiceReportForm({
     return (
         <FormProvider {...form}>
             <form
-                onSubmit={handleSubmit(onSubmit)}
+                onSubmit={handleSubmit(
+                    onSubmit,
+                )}
                 autoComplete="off"
                 noValidate
                 className="space-y-8"

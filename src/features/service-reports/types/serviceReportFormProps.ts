@@ -1,4 +1,6 @@
-import type { ServiceReportResponse } from "./serviceReport.types";
+import type {
+    ServiceReportResponse,
+} from "./serviceReport.types";
 
 export type ServiceReportFormMode =
     | "create"

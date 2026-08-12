@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-
 import { useParams } from "next/navigation";
 
 import {
@@ -60,7 +59,9 @@ export default function EditCalibrationReportPage() {
               asChild
               variant="outline"
             >
-              <Link href={`/calibration-reports/${report.id}`}>
+              <Link
+                href={`/calibration-reports/${report.id}`}
+              >
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back
               </Link>
@@ -74,9 +75,12 @@ export default function EditCalibrationReportPage() {
         }
       />
 
-      <CalibrationReportForm
-        report={report}
-      />
+      <div className="mt-6">
+        <CalibrationReportForm
+          report={report}
+          mode="edit"
+        />
+      </div>
     </PageContainer>
   );
 }

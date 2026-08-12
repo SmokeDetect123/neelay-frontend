@@ -1,8 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import {
+    useCallback,
+    useEffect,
+    useState,
+} from "react";
 
-import { serviceReportService } from "../services/serviceReport.service";
+import {
+    serviceReportService,
+} from "../services/serviceReport.service";
 
 import type {
     CreateServiceReportRequest,
@@ -11,9 +17,14 @@ import type {
 } from "../types/serviceReport.types";
 
 export function useServiceReports() {
-    const [reports, setReports] = useState<ServiceReportResponse[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string>();
+    const [reports, setReports] =
+        useState<ServiceReportResponse[]>([]);
+
+    const [loading, setLoading] =
+        useState(true);
+
+    const [error, setError] =
+        useState<string | undefined>(undefined);
 
     const loadReports = useCallback(
         async (
@@ -36,9 +47,12 @@ export function useServiceReports() {
 
         async function initialize() {
             try {
-                const data = await loadReports(
-                    controller.signal,
-                );
+                setLoading(true);
+
+                const data =
+                    await loadReports(
+                        controller.signal,
+                    );
 
                 if (controller.signal.aborted) {
                     return;
@@ -65,14 +79,17 @@ export function useServiceReports() {
 
         void initialize();
 
-        return () => controller.abort();
+        return () => {
+            controller.abort();
+        };
     }, [loadReports]);
 
     const refresh = useCallback(async () => {
         setLoading(true);
 
         try {
-            const data = await loadReports();
+            const data =
+                await loadReports();
 
             setReports(data);
             setError(undefined);
@@ -87,61 +104,69 @@ export function useServiceReports() {
         }
     }, [loadReports]);
 
-    const getServiceReportById = useCallback(
-        async (
-            id: number,
-        ): Promise<ServiceReportResponse | undefined> => {
-            return serviceReportService.getServiceReportById(
-                id,
-            );
-        },
-        [],
-    );
-
-    const createServiceReport = useCallback(
-        async (
-            request: CreateServiceReportRequest,
-        ): Promise<ServiceReportResponse> => {
-            const report =
-                await serviceReportService.createServiceReport(
-                    request,
-                );
-
-            await refresh();
-
-            return report;
-        },
-        [refresh],
-    );
-
-    const updateServiceReport = useCallback(
-        async (
-            id: number,
-            request: UpdateServiceReportRequest,
-        ): Promise<ServiceReportResponse> => {
-            const report =
-                await serviceReportService.updateServiceReport(
+    const getServiceReportById =
+        useCallback(
+            async (
+                id: number,
+            ): Promise<
+                ServiceReportResponse | undefined
+            > => {
+                return serviceReportService.getServiceReportById(
                     id,
-                    request,
+                );
+            },
+            [],
+        );
+
+    const createServiceReport =
+        useCallback(
+            async (
+                request: CreateServiceReportRequest,
+            ): Promise<ServiceReportResponse> => {
+                const report =
+                    await serviceReportService.createServiceReport(
+                        request,
+                    );
+
+                await refresh();
+
+                return report;
+            },
+            [refresh],
+        );
+
+    const updateServiceReport =
+        useCallback(
+            async (
+                id: number,
+                request: UpdateServiceReportRequest,
+            ): Promise<ServiceReportResponse> => {
+                const report =
+                    await serviceReportService.updateServiceReport(
+                        id,
+                        request,
+                    );
+
+                await refresh();
+
+                return report;
+            },
+            [refresh],
+        );
+
+    const deleteServiceReport =
+        useCallback(
+            async (
+                id: number,
+            ): Promise<void> => {
+                await serviceReportService.deleteServiceReport(
+                    id,
                 );
 
-            await refresh();
-
-            return report;
-        },
-        [refresh],
-    );
-
-    const deleteServiceReport = useCallback(
-        async (id: number): Promise<void> => {
-            await serviceReportService.deleteServiceReport(
-                id,
-            );
-
-            await refresh();
-        },
-        [refresh],
-    );
+                await refresh();
+            },
+            [refresh],
+        );
 
     return {
         reports,
@@ -153,9 +178,7 @@ export function useServiceReports() {
         getServiceReportById,
 
         createServiceReport,
-
         updateServiceReport,
-
         deleteServiceReport,
     };
 }
