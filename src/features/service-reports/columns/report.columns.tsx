@@ -1,39 +1,34 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
 
-import ReportActions from "../components/ReportActions";
+import { Eye, Pencil } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
+import type { ServiceReportResponse } from "../types/serviceReport.types";
 
-import { ServiceReportResponse } from "../types/serviceReport.types";
-
-function getStatusVariant(
-    status: ServiceReportResponse["status"],
-):
-    | "default"
-    | "secondary"
-    | "destructive"
-    | "outline" {
-    switch (status) {
-        case "COMPLETED":
-            return "default";
-
-        case "IN_PROGRESS":
-            return "secondary";
-
-        case "OPEN":
-            return "outline";
-
-        default:
-            return "outline";
-    }
-}
-
+/**
+ * Service Report table columns.
+ *
+ * These columns intentionally use only fields that exist
+ * in the current backend ServiceReportResponse.
+ *
+ * Backend fields:
+ * - reportNo
+ * - customerName
+ * - department
+ * - make
+ * - model
+ * - serialNo
+ * - callType
+ * - locationType
+ * - reportDate
+ */
 export const reportColumns: ColumnDef<ServiceReportResponse>[] = [
     {
-        accessorKey: "reportNumber",
+        accessorKey: "reportNo",
         header: "Report No.",
     },
 
@@ -43,13 +38,49 @@ export const reportColumns: ColumnDef<ServiceReportResponse>[] = [
     },
 
     {
-        accessorKey: "equipment",
+        id: "equipment",
         header: "Equipment",
+        accessorFn: (row) => {
+            const parts = [
+                row.make,
+                row.model,
+            ].filter(Boolean);
+
+            return parts.length > 0
+                ? parts.join(" ")
+                : "—";
+        },
     },
 
     {
-        accessorKey: "attendedByName",
-        header: "Engineer",
+        accessorKey: "serialNo",
+        header: "Serial No.",
+        cell: ({ row }) =>
+            row.original.serialNo || "—",
+    },
+
+    {
+        accessorKey: "department",
+        header: "Department",
+        cell: ({ row }) =>
+            row.original.department || "—",
+    },
+
+    {
+        accessorKey: "callType",
+        header: "Call Type",
+    },
+
+    {
+        accessorKey: "locationType",
+        header: "Location",
+        cell: ({ row }) =>
+            row.original.locationType
+                ? row.original.locationType.replace(
+                      "_",
+                      " ",
+                  )
+                : "—",
     },
 
     {
@@ -58,32 +89,42 @@ export const reportColumns: ColumnDef<ServiceReportResponse>[] = [
     },
 
     {
-        accessorKey: "status",
-
-        header: "Status",
-
-        cell: ({ row }) => (
-            <Badge
-                variant={getStatusVariant(
-                    row.original.status,
-                )}
-            >
-                {row.original.status.replace("_", " ")}
-            </Badge>
-        ),
-    },
-
-    {
         id: "actions",
-
         header: "Actions",
-
         enableSorting: false,
 
-        cell: ({ row }) => (
-            <ReportActions
-                reportId={row.original.id}
-            />
-        ),
+        cell: ({ row }) => {
+            const report = row.original;
+
+            return (
+                <div className="flex items-center gap-2">
+                    <Button
+                        asChild
+                        variant="outline"
+                        size="icon"
+                    >
+                        <Link
+                            href={`/service-reports/${report.id}`}
+                            aria-label={`View report ${report.reportNo}`}
+                        >
+                            <Eye className="h-4 w-4" />
+                        </Link>
+                    </Button>
+
+                    <Button
+                        asChild
+                        variant="outline"
+                        size="icon"
+                    >
+                        <Link
+                            href={`/service-reports/${report.id}/edit`}
+                            aria-label={`Edit report ${report.reportNo}`}
+                        >
+                            <Pencil className="h-4 w-4" />
+                        </Link>
+                    </Button>
+                </div>
+            );
+        },
     },
 ];

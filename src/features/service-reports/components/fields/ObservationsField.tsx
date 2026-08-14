@@ -12,19 +12,24 @@ import {
 
 import { Textarea } from "@/components/ui/textarea";
 
+import { RequiredLabel } from "@/components/forms/RequiredLabel";
+
 import type { ServiceReportFormValues } from "../../types/serviceReportForm.types";
 
 export default function ObservationsField() {
-    const form = useFormContext<ServiceReportFormValues>();
+    const form =
+        useFormContext<ServiceReportFormValues>();
 
     return (
         <FormField
             control={form.control}
-            name="observations"
+            name="problemDescription"
             render={({ field }) => (
                 <FormItem className="md:col-span-2">
                     <FormLabel>
-                        Observations
+                        <RequiredLabel>
+                            Problem Description
+                        </RequiredLabel>
                     </FormLabel>
 
                     <FormControl>
@@ -32,7 +37,7 @@ export default function ObservationsField() {
                             {...field}
                             rows={5}
                             className="resize-y"
-                            placeholder="Describe the issue or observations..."
+                            placeholder="Describe the problem, inspection findings, or observations."
                         />
                     </FormControl>
 

@@ -6,5 +6,4 @@ export * from "./pages";
 export * from "./schemas";
 export * from "./services";
 export * from "./states";
-export * from "./types";
 export * from "./utils";

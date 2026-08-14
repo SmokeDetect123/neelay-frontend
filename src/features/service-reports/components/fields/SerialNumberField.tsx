@@ -12,25 +12,31 @@ import {
 
 import { Input } from "@/components/ui/input";
 
+import { RequiredLabel } from "@/components/forms/RequiredLabel";
+
 import type { ServiceReportFormValues } from "../../types/serviceReportForm.types";
 
 export default function SerialNumberField() {
-    const form = useFormContext<ServiceReportFormValues>();
+    const form =
+        useFormContext<ServiceReportFormValues>();
 
     return (
         <FormField
             control={form.control}
-            name="serialNumber"
+            name="serialNo"
             render={({ field }) => (
                 <FormItem>
                     <FormLabel>
-                        Serial Number
+                        <RequiredLabel>
+                            Serial Number
+                        </RequiredLabel>
                     </FormLabel>
 
                     <FormControl>
                         <Input
                             {...field}
-                            placeholder="Enter serial number"
+                            placeholder="e.g. VP-2026-001"
+                            autoComplete="off"
                         />
                     </FormControl>
 

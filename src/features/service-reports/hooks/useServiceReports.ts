@@ -12,108 +12,84 @@ import {
 
 import type {
     CreateServiceReportRequest,
+    PageResponse,
     ServiceReportResponse,
     UpdateServiceReportRequest,
 } from "../types/serviceReport.types";
 
 export function useServiceReports() {
-    const [reports, setReports] =
-        useState<ServiceReportResponse[]>([]);
+    const [reports, setReports] = useState<
+        ServiceReportResponse[]
+    >([]);
+
+    const [page, setPage] = useState(0);
+
+    const [pageSize, setPageSize] = useState(10);
+
+    const [totalElements, setTotalElements] =
+        useState(0);
+
+    const [totalPages, setTotalPages] =
+        useState(0);
 
     const [loading, setLoading] =
         useState(true);
 
     const [error, setError] =
-        useState<string | undefined>(undefined);
+        useState<string | undefined>();
 
     const loadReports = useCallback(
         async (
-            signal?: AbortSignal,
-        ): Promise<ServiceReportResponse[]> => {
-            const data =
-                await serviceReportService.getServiceReports();
+            requestedPage = page,
+            requestedSize = pageSize,
+        ) => {
+            setLoading(true);
 
-            if (signal?.aborted) {
-                return [];
-            }
-
-            return data;
-        },
-        [],
-    );
-
-    useEffect(() => {
-        const controller = new AbortController();
-
-        async function initialize() {
             try {
-                setLoading(true);
-
-                const data =
-                    await loadReports(
-                        controller.signal,
+                const response: PageResponse<ServiceReportResponse> =
+                    await serviceReportService.getServiceReports(
+                        requestedPage,
+                        requestedSize,
                     );
 
-                if (controller.signal.aborted) {
-                    return;
-                }
-
-                setReports(data);
+                setReports(response.content);
+                setPage(response.number);
+                setPageSize(response.size);
+                setTotalElements(
+                    response.totalElements,
+                );
+                setTotalPages(
+                    response.totalPages,
+                );
                 setError(undefined);
             } catch (err) {
-                if (controller.signal.aborted) {
-                    return;
-                }
-
                 setError(
                     err instanceof Error
                         ? err.message
                         : "Failed to load service reports.",
                 );
             } finally {
-                if (!controller.signal.aborted) {
-                    setLoading(false);
-                }
+                setLoading(false);
             }
-        }
+        },
+        [page, pageSize],
+    );
 
-        void initialize();
-
-        return () => {
-            controller.abort();
-        };
+    useEffect(() => {
+        void loadReports();
     }, [loadReports]);
 
     const refresh = useCallback(async () => {
-        setLoading(true);
-
-        try {
-            const data =
-                await loadReports();
-
-            setReports(data);
-            setError(undefined);
-        } catch (err) {
-            setError(
-                err instanceof Error
-                    ? err.message
-                    : "Failed to load service reports.",
-            );
-        } finally {
-            setLoading(false);
-        }
-    }, [loadReports]);
+        await loadReports(page, pageSize);
+    }, [loadReports, page, pageSize]);
 
     const getServiceReportById =
         useCallback(
             async (
                 id: number,
-            ): Promise<
-                ServiceReportResponse | undefined
-            > => {
-                return serviceReportService.getServiceReportById(
-                    id,
-                );
+            ): Promise<ServiceReportResponse> => {
+                return serviceReportService
+                    .getServiceReportById(id);
             },
             [],
         );
@@ -124,15 +100,16 @@ export function useServiceReports() {
                 request: CreateServiceReportRequest,
             ): Promise<ServiceReportResponse> => {
                 const report =
-                    await serviceReportService.createServiceReport(
-                        request,
-                    );
+                    await serviceReportService
+                        .createServiceReport(
+                            request,
+                        );
 
-                await refresh();
+                await loadReports(page, pageSize);
 
                 return report;
             },
-            [refresh],
+            [loadReports, page, pageSize],
         );
 
     const updateServiceReport =
@@ -142,43 +119,59 @@ export function useServiceReports() {
                 request: UpdateServiceReportRequest,
             ): Promise<ServiceReportResponse> => {
                 const report =
-                    await serviceReportService.updateServiceReport(
-                        id,
-                        request,
-                    );
+                    await serviceReportService
+                        .updateServiceReport(
+                            id,
+                            request,
+                        );
 
-                await refresh();
+                await loadReports(page, pageSize);
 
                 return report;
             },
-            [refresh],
+            [loadReports, page, pageSize],
         );
 
-    const deleteServiceReport =
-        useCallback(
-            async (
-                id: number,
-            ): Promise<void> => {
-                await serviceReportService.deleteServiceReport(
-                    id,
-                );
+    const goToPage = useCallback(
+        async (nextPage: number) => {
+            if (
+                nextPage < 0 ||
+                (
+                    totalPages > 0 &&
+                    nextPage >= totalPages
+                )
+            ) {
+                return;
+            }
 
-                await refresh();
-            },
-            [refresh],
-        );
+            await loadReports(
+                nextPage,
+                pageSize,
+            );
+        },
+        [
+            loadReports,
+            pageSize,
+            totalPages,
+        ],
+    );
 
     return {
         reports,
+
+        page,
+        pageSize,
+        totalElements,
+        totalPages,
+
         loading,
         error,
 
         refresh,
+        goToPage,
 
         getServiceReportById,
-
         createServiceReport,
         updateServiceReport,
-        deleteServiceReport,
     };
 }

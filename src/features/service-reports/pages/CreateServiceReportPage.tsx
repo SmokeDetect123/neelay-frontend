@@ -1,12 +1,15 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+
+import {
+    ArrowLeft,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
-import { PageContainer } from "@/components/common/PageContainer";
-import { PageHeader } from "@/components/common/PageHeader";
+import {PageContainer} from "@/components/common/PageContainer";
+import PageHeader from "@/components/common/PageHeader";
 
 import ServiceReportForm from "../components/ServiceReportForm";
 
@@ -29,7 +32,7 @@ export default function CreateServiceReportPage() {
                 }
             />
 
-            <ServiceReportForm 
+            <ServiceReportForm
                 mode="create"
             />
         </PageContainer>

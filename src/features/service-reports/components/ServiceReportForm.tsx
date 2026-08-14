@@ -2,8 +2,6 @@
 
 import { useEffect } from "react";
 
-import { useRouter } from "next/navigation";
-
 import {
     FormProvider,
     useForm,
@@ -11,11 +9,9 @@ import {
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { toast } from "sonner";
-
-import { useServiceReports } from "../hooks/useServiceReports";
-
-import { serviceReportSchema } from "../schemas/serviceReport.schema";
+import {
+    serviceReportSchema,
+} from "../schemas/serviceReport.schema";
 
 import type {
     ServiceReportFormValues,
@@ -35,64 +31,62 @@ export default function ServiceReportForm({
     mode,
     report,
 }: ServiceReportFormProps) {
-    const router = useRouter();
+    const form =
+        useForm<ServiceReportFormValues>({
+            resolver:
+                zodResolver(
+                    serviceReportSchema,
+                ),
 
-    const {
-        createServiceReport,
-        updateServiceReport,
-    } = useServiceReports();
+            mode: "onSubmit",
 
-    const form = useForm<ServiceReportFormValues>({
-        resolver: zodResolver(
-            serviceReportSchema,
-        ),
+            reValidateMode: "onChange",
 
-        mode: "onSubmit",
+            defaultValues: {
+                customerId: 0,
 
-        reValidateMode: "onChange",
+                customerName: "",
+                customerAddress: "",
+                department: "",
+                personContacted: "",
 
-        defaultValues: {
-            customerId: 0,
+                attendedBy: 0,
 
-            attendedBy: 0,
+                reportDate:
+                    new Date()
+                        .toISOString()
+                        .split("T")[0],
 
-            reportDate:
-                new Date()
-                    .toISOString()
-                    .split("T")[0],
+                make: "",
+                model: "",
+                serialNo: "",
 
-            equipment: "",
+                callType: "",
+                locationType: "",
 
-            serialNumber: "",
+                problemDescription: "",
+                actionTaken: "",
+                materialUsed: "",
 
-            observations: "",
-
-            actionTaken: "",
-
-            recommendations: "",
-        },
-    });
+                customerSignatureUrl: "",
+                signedDate: "",
+            },
+        });
 
     const {
         handleSubmit,
         reset,
         setFocus,
-
         formState: {
             errors,
         },
     } = form;
 
     /*
-     * Populate the form when editing an
-     * existing service report.
+     * Populate the form when editing an existing report.
      *
-     * The report is loaded asynchronously by
-     * EditServiceReportPage, so defaultValues
-     * cannot be used for the loaded report.
-     *
-     * React Hook Form must therefore be
-     * explicitly reset with the report data.
+     * This intentionally maps only fields that belong to
+     * the current frontend form contract.
      */
     useEffect(() => {
         if (
@@ -103,29 +97,50 @@ export default function ServiceReportForm({
         }
 
         reset({
-            customerId:
-                report.customerId,
+            customerName:
+                report.customerName ?? "",
 
-            attendedBy:
-                report.attendedBy,
+            customerAddress:
+                report.customerAddress ?? "",
+
+            department:
+                report.department ?? "",
+
+            personContacted:
+                report.personContacted ?? "",
 
             reportDate:
                 report.reportDate,
 
-            equipment:
-                report.equipment,
+            make:
+                report.make ?? "",
 
-            serialNumber:
-                report.serialNumber,
+            model:
+                report.model ?? "",
 
-            observations:
-                report.observations,
+            serialNo:
+                report.serialNo ?? "",
+
+            callType:
+                report.callType ?? "",
+
+            locationType:
+                report.locationType ?? "",
+
+            problemDescription:
+                report.problemDescription ?? "",
 
             actionTaken:
-                report.actionTaken,
+                report.actionTaken ?? "",
 
-            recommendations:
-                report.recommendations,
+            materialUsed:
+                report.materialUsed ?? "",
+
+            customerSignatureUrl:
+                report.customerSignatureUrl ?? "",
+
+            signedDate:
+                report.signedDate ?? "",
         });
     }, [
         mode,
@@ -135,7 +150,7 @@ export default function ServiceReportForm({
 
     /*
      * Focus the first invalid field after
-     * validation.
+     * a failed validation attempt.
      */
     useEffect(() => {
         const firstError =
@@ -154,51 +169,26 @@ export default function ServiceReportForm({
     const onSubmit = async (
         data: ServiceReportFormValues,
     ) => {
-        try {
-            if (mode === "create") {
-                await createServiceReport(
-                    data,
-                );
+        console.log(
+            mode === "create"
+                ? "Creating service report:"
+                : "Updating service report:",
+            data,
+        );
 
-                toast.success(
-                    "Service Report created successfully.",
-                );
-            } else {
-                if (!report) {
-                    throw new Error(
-                        "Service Report not found.",
-                    );
-                }
-
-                await updateServiceReport(
-                    report.id,
-                    data,
-                );
-
-                toast.success(
-                    "Service Report updated successfully.",
-                );
-            }
-
-            reset();
-
-            router.push(
-                "/service-reports",
-            );
-        } catch (error) {
-            console.error(
-                "Service Report submission failed:",
-                error,
-            );
-
-            toast.error(
-                error instanceof Error
-                    ? error.message
-                    : mode === "create"
-                      ? "Failed to create Service Report."
-                      : "Failed to update Service Report.",
-            );
-        }
+        /*
+         * Backend integration intentionally remains
+         * outside this checkpoint.
+         *
+         * Create:
+         *   POST /api/service-reports
+         *
+         * Edit:
+         *   PUT /api/service-reports/{id}
+         *
+         * These calls will be connected after the
+         * frontend compiles cleanly.
+         */
     };
 
     return (

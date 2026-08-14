@@ -1,75 +1,85 @@
 "use client";
 
-import { Search } from "lucide-react";
+import FilterSelect, {
+    FILTER_ALL,
+} from "@/components/forms/FilterSelect";
 
-import { Input } from "@/components/ui/input";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-
-import { ReportStatus } from "../types/serviceReport.types";
+    CALL_TYPES,
+    LOCATION_TYPES,
+} from "../types/service-report.enums";
 
 interface ServiceReportsFiltersProps {
-    search: string;
-    status: ReportStatus | "ALL";
+    callType: string;
+    locationType: string;
 
-    onSearchChange: (value: string) => void;
-    onStatusChange: (value: ReportStatus | "ALL") => void;
+    onCallTypeChange: (
+        value: string,
+    ) => void;
+
+    onLocationTypeChange: (
+        value: string,
+    ) => void;
+}
+
+function formatLabel(value: string): string {
+    return value
+        .toLowerCase()
+        .replaceAll("_", " ")
+        .replace(/\b\w/g, (character) =>
+            character.toUpperCase(),
+        );
 }
 
 export default function ServiceReportsFilters({
-    search,
-    status,
-    onSearchChange,
-    onStatusChange,
+    callType,
+    locationType,
+    onCallTypeChange,
+    onLocationTypeChange,
 }: ServiceReportsFiltersProps) {
     return (
-        <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="relative w-full md:max-w-md">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+        <div className="flex flex-wrap gap-4">
+            <FilterSelect
+                placeholder="All Call Types"
+                value={callType}
+                onChange={onCallTypeChange}
+                widthClassName="w-full md:w-56"
+                options={[
+                    {
+                        label: "All Call Types",
+                        value: FILTER_ALL,
+                    },
 
-                <Input
-                    className="pl-10"
-                    placeholder="Search reports..."
-                    value={search}
-                    onChange={(e) =>
-                        onSearchChange(e.target.value)
-                    }
-                />
-            </div>
+                    ...Object.values(
+                        CALL_TYPES,
+                    ).map((type) => ({
+                        label: formatLabel(type),
+                        value: type,
+                    })),
+                ]}
+            />
 
-            <Select
-                value={status}
-                onValueChange={(value) =>
-                    onStatusChange(value as ReportStatus | "ALL")
+            <FilterSelect
+                placeholder="All Locations"
+                value={locationType}
+                onChange={
+                    onLocationTypeChange
                 }
-            >
-                <SelectTrigger className="w-full md:w-56">
-                    <SelectValue />
-                </SelectTrigger>
+                widthClassName="w-full md:w-56"
+                options={[
+                    {
+                        label: "All Locations",
+                        value: FILTER_ALL,
+                    },
 
-                <SelectContent>
-                    <SelectItem value="ALL">
-                        All Reports
-                    </SelectItem>
-
-                    <SelectItem value="OPEN">
-                        Open
-                    </SelectItem>
-
-                    <SelectItem value="IN_PROGRESS">
-                        In Progress
-                    </SelectItem>
-
-                    <SelectItem value="COMPLETED">
-                        Completed
-                    </SelectItem>
-                </SelectContent>
-            </Select>
+                    ...Object.values(
+                        LOCATION_TYPES,
+                    ).map((type) => ({
+                        label: formatLabel(type),
+                        value: type,
+                    })),
+                ]}
+            />
         </div>
     );
 }

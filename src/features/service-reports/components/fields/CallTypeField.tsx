@@ -20,58 +20,68 @@ import {
 
 import { RequiredLabel } from "@/components/forms/RequiredLabel";
 
-import { useUsers } from "@/features/users/hooks/useUsers";
-
 import type { ServiceReportFormValues } from "../../types/serviceReportForm.types";
 
-export default function EngineerSelectField() {
+const CALL_TYPES = [
+    {
+        value: "BREAKDOWN",
+        label: "Breakdown",
+    },
+    {
+        value: "PREVENTIVE_MAINTENANCE",
+        label: "Preventive Maintenance",
+    },
+    {
+        value: "INSTALLATION",
+        label: "Installation",
+    },
+    {
+        value: "INSPECTION",
+        label: "Inspection",
+    },
+    {
+        value: "OTHER",
+        label: "Other",
+    },
+];
+
+export default function CallTypeField() {
     const form =
         useFormContext<ServiceReportFormValues>();
-
-    const { users } = useUsers();
 
     return (
         <FormField
             control={form.control}
-            name="attendedBy"
+            name="callType"
             render={({ field }) => (
                 <FormItem>
                     <FormLabel>
                         <RequiredLabel>
-                            Engineer
+                            Call Type
                         </RequiredLabel>
                     </FormLabel>
 
                     <Select
-                        value={
-                            field.value
-                                ? field.value.toString()
-                                : ""
-                        }
-                        onValueChange={(value) =>
-                            field.onChange(
-                                Number(value),
-                            )
-                        }
-                        onOpenChange={() => {
-                            field.onBlur();
-                        }}
+                        value={field.value}
+                        onValueChange={field.onChange}
                     >
                         <FormControl>
                             <SelectTrigger>
-                                <SelectValue placeholder="Select engineer" />
+                                <SelectValue placeholder="Select call type" />
                             </SelectTrigger>
                         </FormControl>
 
                         <SelectContent>
-                            {users.map((user) => (
-                                <SelectItem
-                                    key={user.id}
-                                    value={user.id.toString()}
-                                >
-                                    {user.fullName}
-                                </SelectItem>
-                            ))}
+                            {CALL_TYPES.map(
+                                (type) => (
+                                    <SelectItem
+                                        key={type.value}
+                                        value={type.value}
+                                    >
+                                        {type.label}
+                                    </SelectItem>
+                                ),
+                            )}
                         </SelectContent>
                     </Select>
 

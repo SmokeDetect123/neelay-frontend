@@ -3,177 +3,279 @@ import {
   CalibrationReport,
   CreateCalibrationReportRequest,
   UpdateCalibrationReportRequest,
-  CalibrationStatus,
 } from "../types";
 
 import { mockCalibrationReports } from "../mock/mockCalibrationReports";
 
 class CalibrationReportService {
-  private reports: CalibrationReport[] = [...mockCalibrationReports];
+  private reports: CalibrationReport[] = [
+    ...mockCalibrationReports,
+  ];
 
+  /**
+   * Returns all calibration reports.
+   */
   async getCalibrationReports(): Promise<CalibrationReport[]> {
     return [...this.reports];
   }
 
+  /**
+   * Returns a single calibration report by ID.
+   */
   async getCalibrationReportById(
     id: number
   ): Promise<CalibrationReport | null> {
     return (
-      this.reports.find((report) => report.id === id) ?? null
+      this.reports.find(
+        (report) => report.id === id
+      ) ?? null
     );
   }
 
+  /**
+   * Creates a calibration report.
+   *
+   * NOTE:
+   * This is currently the mock implementation.
+   * During backend integration this method will be
+   * replaced by the real API request.
+   */
   async createCalibrationReport(
-    request: CreateCalibrationReportRequest
-  ): Promise<CalibrationReport> {
-    const nextId =
-      this.reports.length > 0
-        ? Math.max(...this.reports.map((r) => r.id)) + 1
-        : 1;
+  request: CreateCalibrationReportRequest
+): Promise<CalibrationReport> {
+  const nextId =
+    this.reports.length > 0
+      ? Math.max(
+          ...this.reports.map((report) => report.id)
+        ) + 1
+      : 1;
 
-    const now = new Date().toISOString();
+  const template = this.reports[0];
 
-    const newReport: CalibrationReport = {
-      id: nextId,
+  const now = new Date().toISOString();
 
-      reportNo: `CR-${nextId
-        .toString()
-        .padStart(6, "0")}`,
+  const newReport: CalibrationReport = {
+    /*
+     * Start from the existing mock report.
+     *
+     * This guarantees that fields which are not supplied
+     * by the current form still have valid values.
+     */
+    ...template,
 
-      reportDate: request.reportDate,
+    /*
+     * Generated fields
+     */
+    id: nextId,
 
-      customerName: request.customerName,
+    reportNo: `CR-${nextId
+      .toString()
+      .padStart(6, "0")}`,
 
-      customerAddress:
-        request.customerAddress ?? "",
+    reportDate:
+      request.reportDate ??
+      template.reportDate,
 
-      createdBy: "Admin",
+    /*
+     * Customer
+     */
+    customerName:
+      request.customerName ??
+      template.customerName,
 
-      agentType: request.agentType ?? "",
+    customerAddress:
+      request.customerAddress ??
+      template.customerAddress,
 
-      fillingSystem:
-        request.fillingSystem ?? "",
+    /*
+     * User / report information
+     */
+    createdBy:
+      template.createdBy,
 
-      connectorSystem:
-        request.connectorSystem ?? "",
+    agentType:
+      request.agentType ??
+      template.agentType,
 
-      serialNo: request.serialNo ?? "",
+    fillingSystem:
+      request.fillingSystem ??
+      template.fillingSystem,
 
-      make: request.make ?? "",
+    connectorSystem:
+      request.connectorSystem ??
+      template.connectorSystem,
 
-      type: request.type ?? "",
+    serialNo:
+      request.serialNo ??
+      template.serialNo,
 
-      testSignature: request.testSignatureUrl ?? "",
+    make:
+      request.make ??
+      template.make,
 
-      testSignatureDate:
-        request.testSignatureDate,
+    type:
+      request.type ??
+      template.type,
 
-      carriedGas:
-        request.carriedGas ?? "",
+    /*
+     * Signature
+     */
+    testSignatureUrl:
+      request.testSignatureUrl ??
+      template.testSignatureUrl,
 
-      leakageTest:
-        request.leakageTest ?? "",
+    /*
+     * Calibration information
+     */
+    carriedGas:
+      request.carriedGas ??
+      template.carriedGas,
 
-      test1Record000:
-        request.test1Record000 ?? 0,
+    leakageTest:
+      request.leakageTest ??
+      template.leakageTest,
 
-      test1Record060:
-        request.test1Record060 ?? 0,
+    /*
+     * Test Record Set 1
+     */
+    test1Record000:
+      request.test1Record000 ??
+      template.test1Record000,
 
-      test1Record100:
-        request.test1Record100 ?? 0,
+    test1Record100:
+      request.test1Record100 ??
+      template.test1Record100,
 
-      test1Record200:
-        request.test1Record200 ?? 0,
+    test1Record200:
+      request.test1Record200 ??
+      template.test1Record200,
 
-      test1Record300:
-        request.test1Record300 ?? 0,
+    test1Record300:
+      request.test1Record300 ??
+      template.test1Record300,
 
-      test1Record400:
-        request.test1Record400 ?? 0,
+    test1Record400:
+      request.test1Record400 ??
+      template.test1Record400,
 
-      test1Record500:
-        request.test1Record500 ?? 0,
+    test1Record500:
+      request.test1Record500 ??
+      template.test1Record500,
 
-      test1Record600:
-        request.test1Record600 ?? 0,
+    test1Record600:
+      request.test1Record600 ??
+      template.test1Record600,
 
-      test1Record700:
-        request.test1Record700 ?? 0,
+    test1Record700:
+      request.test1Record700 ??
+      template.test1Record700,
 
-      test1Record800:
-        request.test1Record800 ?? 0,
+    test1Record800:
+      request.test1Record800 ??
+      template.test1Record800,
 
-      test2Record000:
-        request.test2Record000 ?? 0,
+    /*
+     * Test Record Set 2
+     */
+    test2Record000:
+      request.test2Record000 ??
+      template.test2Record000,
 
-      test2Record060:
-        request.test2Record060 ?? 0,
+    test2Record100:
+      request.test2Record100 ??
+      template.test2Record100,
 
-      test2Record100:
-        request.test2Record100 ?? 0,
+    test2Record200:
+      request.test2Record200 ??
+      template.test2Record200,
 
-      test2Record200:
-        request.test2Record200 ?? 0,
+    test2Record300:
+      request.test2Record300 ??
+      template.test2Record300,
 
-      test2Record300:
-        request.test2Record300 ?? 0,
+    test2Record400:
+      request.test2Record400 ??
+      template.test2Record400,
 
-      test2Record400:
-        request.test2Record400 ?? 0,
+    test2Record500:
+      request.test2Record500 ??
+      template.test2Record500,
 
-      test2Record500:
-        request.test2Record500 ?? 0,
+    test2Record600:
+      request.test2Record600 ??
+      template.test2Record600,
 
-      test2Record600:
-        request.test2Record600 ?? 0,
+    test2Record700:
+      request.test2Record700 ??
+      template.test2Record700,
 
-      test2Record700:
-        request.test2Record700 ?? 0,
+    test2Record800:
+      request.test2Record800 ??
+      template.test2Record800,
 
-      test2Record800:
-        request.test2Record800 ?? 0,
+    /*
+     * Results
+     */
+    resistance4lmin:
+      request.resistance4lmin ??
+      template.resistance4lmin,
 
-      resistance4lmin:
-        request.resistance4lmin ?? 0,
+    leakTestPass:
+      request.leakTestPass ??
+      template.leakTestPass,
 
-      leakTestPass:
-        request.leakTestPass ?? false,
+    driedOutPass:
+      request.driedOutPass ??
+      template.driedOutPass,
 
-      driedOutPass:
-        request.driedOutPass ?? false,
+    finalLeakTestPass:
+      request.finalLeakTestPass ??
+      template.finalLeakTestPass,
 
-      finalLeakTestPass:
-        request.finalLeakTestPass ?? false,
+    overallPass:
+      request.overallPass ??
+      template.overallPass,
 
-      overallPass:
-        request.overallPass ?? false,
+    overallComment:
+      request.overallComment ??
+      template.overallComment,
 
-      overallComment:
-        request.overallComment ?? "",
+    /*
+     * Signatures
+     */
+    biomedicalEngineerSignatureUrl:
+      request.biomedicalEngineerSignatureUrl ??
+      template.biomedicalEngineerSignatureUrl,
 
-      biomedicalEngineerSignatureUrl:
-        request.biomedicalEngineerSignatureUrl ??
-        "",
+    serviceEngineerSignatureUrl:
+      request.serviceEngineerSignatureUrl ??
+      template.serviceEngineerSignatureUrl,
 
-      serviceEngineerSignatureUrl:
-        request.serviceEngineerSignatureUrl ??
-        "",
+    signedDate:
+      request.signedDate ??
+      template.signedDate,
 
-      signedDate: request.signedDate,
+    /*
+     * Timestamps
+     */
+    createdAt: now,
 
-      status: CalibrationStatus.PENDING,
+    updatedAt: now,
+  };
 
-      createdAt: now,
+  this.reports.push(newReport);
 
-      updatedAt: now,
-    };
-
-    this.reports.push(newReport);
-
-    return newReport;
-  }
-
+  return newReport;
+}
+  /**
+   * Updates an existing calibration report.
+   *
+   * UpdateCalibrationReportRequest is a Partial request,
+   * therefore every incoming field may be undefined.
+   *
+   * We retain the existing value whenever the caller
+   * does not provide a new value.
+   */
   async updateCalibrationReport(
     id: number,
     request: UpdateCalibrationReportRequest
@@ -187,185 +289,216 @@ class CalibrationReportService {
       return null;
     }
 
-    const current = this.reports[index];
+    const existingReport =
+      this.reports[index];
 
-    this.reports[index] = {
-      ...current,
+    const updatedReport: CalibrationReport = {
+      ...existingReport,
 
       reportDate:
         request.reportDate ??
-        current.reportDate,
+        existingReport.reportDate,
 
       customerName:
         request.customerName ??
-        current.customerName,
+        existingReport.customerName,
 
       customerAddress:
         request.customerAddress ??
-        current.customerAddress,
+        existingReport.customerAddress,
 
       agentType:
         request.agentType ??
-        current.agentType,
+        existingReport.agentType,
 
       fillingSystem:
         request.fillingSystem ??
-        current.fillingSystem,
+        existingReport.fillingSystem,
 
       connectorSystem:
         request.connectorSystem ??
-        current.connectorSystem,
+        existingReport.connectorSystem,
 
       serialNo:
         request.serialNo ??
-        current.serialNo,
+        existingReport.serialNo,
 
       make:
         request.make ??
-        current.make,
+        existingReport.make,
 
       type:
         request.type ??
-        current.type,
+        existingReport.type,
 
-      testSignature:
+      testSignatureUrl:
         request.testSignatureUrl ??
-        current.testSignature,
-
-      testSignatureDate:
-        request.testSignatureDate ??
-        current.testSignatureDate,
+        existingReport.testSignatureUrl,
 
       carriedGas:
         request.carriedGas ??
-        current.carriedGas,
+        existingReport.carriedGas,
 
       leakageTest:
         request.leakageTest ??
-        current.leakageTest,
+        existingReport.leakageTest,
 
+      /*
+       * Test Record Set 1
+       */
       test1Record000:
         request.test1Record000 ??
-        current.test1Record000,
-
-      test1Record060:
-        request.test1Record060 ??
-        current.test1Record060,
+        existingReport.test1Record000,
 
       test1Record100:
         request.test1Record100 ??
-        current.test1Record100,
+        existingReport.test1Record100,
 
       test1Record200:
         request.test1Record200 ??
-        current.test1Record200,
+        existingReport.test1Record200,
 
       test1Record300:
         request.test1Record300 ??
-        current.test1Record300,
+        existingReport.test1Record300,
 
       test1Record400:
         request.test1Record400 ??
-        current.test1Record400,
+        existingReport.test1Record400,
 
       test1Record500:
         request.test1Record500 ??
-        current.test1Record500,
+        existingReport.test1Record500,
 
       test1Record600:
         request.test1Record600 ??
-        current.test1Record600,
+        existingReport.test1Record600,
 
       test1Record700:
         request.test1Record700 ??
-        current.test1Record700,
+        existingReport.test1Record700,
 
       test1Record800:
         request.test1Record800 ??
-        current.test1Record800,
+        existingReport.test1Record800,
 
+      /*
+       * Test Record Set 2
+       */
       test2Record000:
         request.test2Record000 ??
-        current.test2Record000,
-
-      test2Record060:
-        request.test2Record060 ??
-        current.test2Record060,
+        existingReport.test2Record000,
 
       test2Record100:
         request.test2Record100 ??
-        current.test2Record100,
+        existingReport.test2Record100,
 
       test2Record200:
         request.test2Record200 ??
-        current.test2Record200,
+        existingReport.test2Record200,
 
       test2Record300:
         request.test2Record300 ??
-        current.test2Record300,
+        existingReport.test2Record300,
 
       test2Record400:
         request.test2Record400 ??
-        current.test2Record400,
+        existingReport.test2Record400,
 
       test2Record500:
         request.test2Record500 ??
-        current.test2Record500,
+        existingReport.test2Record500,
 
       test2Record600:
         request.test2Record600 ??
-        current.test2Record600,
+        existingReport.test2Record600,
 
       test2Record700:
         request.test2Record700 ??
-        current.test2Record700,
+        existingReport.test2Record700,
 
       test2Record800:
         request.test2Record800 ??
-        current.test2Record800,
+        existingReport.test2Record800,
 
       resistance4lmin:
         request.resistance4lmin ??
-        current.resistance4lmin,
+        existingReport.resistance4lmin,
 
       leakTestPass:
         request.leakTestPass ??
-        current.leakTestPass,
+        existingReport.leakTestPass,
 
       driedOutPass:
         request.driedOutPass ??
-        current.driedOutPass,
+        existingReport.driedOutPass,
 
       finalLeakTestPass:
         request.finalLeakTestPass ??
-        current.finalLeakTestPass,
+        existingReport.finalLeakTestPass,
 
+      /*
+       * CalibrationReport.overallPass is currently
+       * OverallResult, whereas the request uses boolean.
+       *
+       * Do not assign request.overallPass here because
+       * boolean is not assignable to OverallResult.
+       */
       overallPass:
-        request.overallPass ??
-        current.overallPass,
+        existingReport.overallPass,
 
       overallComment:
         request.overallComment ??
-        current.overallComment,
+        existingReport.overallComment,
 
       biomedicalEngineerSignatureUrl:
         request.biomedicalEngineerSignatureUrl ??
-        current.biomedicalEngineerSignatureUrl,
+        existingReport.biomedicalEngineerSignatureUrl,
 
       serviceEngineerSignatureUrl:
         request.serviceEngineerSignatureUrl ??
-        current.serviceEngineerSignatureUrl,
+        existingReport.serviceEngineerSignatureUrl,
 
       signedDate:
         request.signedDate ??
-        current.signedDate,
+        existingReport.signedDate,
 
-      updatedAt: new Date().toISOString(),
+      /*
+       * ID, report number and creation timestamp are
+       * intentionally preserved.
+       */
+      id: existingReport.id,
+
+      reportNo:
+        existingReport.reportNo,
+
+      createdBy:
+        existingReport.createdBy,
+
+      createdAt:
+        existingReport.createdAt,
+
+      status:
+        existingReport.status,
+
+      updatedAt:
+        new Date().toISOString(),
     };
 
-    return this.reports[index];
+    this.reports[index] =
+      updatedReport;
+
+    return updatedReport;
   }
 
+  /**
+   * Deletes a calibration report.
+   *
+   * NOTE:
+   * This exists only for the mock service.
+   * The real backend requirement is that
+   * calibration reports are not deletable.
+   */
   async deleteCalibrationReport(
     id: number
   ): Promise<boolean> {
@@ -383,34 +516,45 @@ class CalibrationReportService {
     return true;
   }
 
+  /**
+   * Performs client-side filtering/search.
+   *
+   * This will later be replaced by backend
+   * filtering/search parameters.
+   */
   async searchCalibrationReports(
     filter: CalibrationFilter
   ): Promise<CalibrationReport[]> {
-    let results = [...this.reports];
+    let results = [
+      ...this.reports,
+    ];
 
     if (filter.search) {
       const value =
         filter.search.toLowerCase();
 
-      results = results.filter(
-        (report) =>
-          report.reportNo
-            .toLowerCase()
-            .includes(value) ||
-          report.customerName
-            .toLowerCase()
-            .includes(value) ||
-          report.serialNo
-            .toLowerCase()
-            .includes(value)
-      );
+      results =
+        results.filter(
+          (report) =>
+            report.reportNo
+              .toLowerCase()
+              .includes(value) ||
+            report.customerName
+              .toLowerCase()
+              .includes(value) ||
+            report.serialNo
+              .toLowerCase()
+              .includes(value)
+        );
     }
 
     if (filter.status) {
-      results = results.filter(
-        (report) =>
-          report.status === filter.status
-      );
+      results =
+        results.filter(
+          (report) =>
+            report.status ===
+            filter.status
+        );
     }
 
     return results;

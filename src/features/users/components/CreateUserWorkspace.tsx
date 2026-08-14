@@ -11,16 +11,22 @@ import { UserForm } from "./UserForm";
 
 import { useUsers } from "../hooks/useUsers";
 
-import type { CreateUserRequest } from "../types/user.types";
+import type {
+    CreateUserRequest,
+    UpdateUserRequest,
+} from "../types/user.types";
 
 export default function CreateUserWorkspace() {
     const router = useRouter();
 
     const { createUser } = useUsers();
 
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitting, setIsSubmitting] =
+        useState(false);
 
-    async function handleSubmit(values: CreateUserRequest) {
+    async function handleSubmit(
+        values: CreateUserRequest | UpdateUserRequest
+    ) {
         if (isSubmitting) {
             return;
         }
@@ -28,13 +34,27 @@ export default function CreateUserWorkspace() {
         try {
             setIsSubmitting(true);
 
-            await createUser(values);
+            /*
+             * This workspace is permanently in "create" mode,
+             * so UserForm will provide a CreateUserRequest here.
+             *
+             * The union is required because UserForm is shared
+             * between create and edit modes.
+             */
+            await createUser(
+                values as CreateUserRequest
+            );
 
-            toast.success("User created successfully.");
+            toast.success(
+                "User created successfully."
+            );
 
             router.push("/users");
         } catch (error) {
-            console.error(error);
+            console.error(
+                "Failed to create user",
+                error
+            );
 
             toast.error(
                 error instanceof Error

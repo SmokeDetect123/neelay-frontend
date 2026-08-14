@@ -5,7 +5,7 @@ import CalibrationReportForm
 
 import {
     PageHeader,
-} from "@/components/common";
+} from "@/components/common/PageHeader";
 
 export default function CreateCalibrationReportPage() {
     return (

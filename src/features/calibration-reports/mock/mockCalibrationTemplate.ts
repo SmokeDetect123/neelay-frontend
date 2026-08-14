@@ -3,7 +3,6 @@ import {
   CalibrationStatus,
   ConnectorSystem,
   FillingSystem,
-  OverallResult,
 } from "../types";
 
 export const calibrationReportTemplate: Omit<
@@ -30,6 +29,8 @@ export const calibrationReportTemplate: Omit<
 
   testSignature: "Calibration Test Completed",
 
+  testSignatureUrl: "",
+
   carriedGas: "Oxygen",
 
   leakageTest: "Completed",
@@ -39,28 +40,30 @@ export const calibrationReportTemplate: Omit<
    */
 
   test1Record000: 0,
-  test1Record100: 1,
-  test1Record200: 2,
-  test1Record300: 3,
-  test1Record400: 4,
-  test1Record500: 5,
-  test1Record600: 6,
-  test1Record700: 7,
-  test1Record800: 8,
+  test1Record060: 0,
+  test1Record100: 0,
+  test1Record200: 0,
+  test1Record300: 0,
+  test1Record400: 0,
+  test1Record500: 0,
+  test1Record600: 0,
+  test1Record700: 0,
+  test1Record800: 0,
 
   /*
    * Test Record Set 2
    */
 
   test2Record000: 0,
-  test2Record100: 1,
-  test2Record200: 2,
-  test2Record300: 3,
-  test2Record400: 4,
-  test2Record500: 5,
-  test2Record600: 6,
-  test2Record700: 7,
-  test2Record800: 8,
+  test2Record060: 0,
+  test2Record100: 0,
+  test2Record200: 0,
+  test2Record300: 0,
+  test2Record400: 0,
+  test2Record500: 0,
+  test2Record600: 0,
+  test2Record700: 0,
+  test2Record800: 0,
 
   resistance4lmin: 0.25,
 
@@ -70,7 +73,7 @@ export const calibrationReportTemplate: Omit<
 
   finalLeakTestPass: true,
 
-  overallPass: OverallResult.PASS,
+  overallPass: false,
 
   biomedicalEngineerSignatureUrl:
     "/mock/signatures/biomedical-engineer.png",

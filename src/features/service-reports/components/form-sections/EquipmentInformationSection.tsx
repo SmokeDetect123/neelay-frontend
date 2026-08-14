@@ -5,6 +5,7 @@ import { FormSection } from "@/components/forms/FormSection";
 
 import ReportDateField from "../fields/ReportDateField";
 import EquipmentField from "../fields/EquipmentField";
+import ModelField from "../fields/ModelField";
 import SerialNumberField from "../fields/SerialNumberField";
 
 export default function EquipmentInformationSection() {
@@ -17,6 +18,8 @@ export default function EquipmentInformationSection() {
                 <ReportDateField />
 
                 <EquipmentField />
+
+                <ModelField />
 
                 <SerialNumberField />
             </FormGrid>

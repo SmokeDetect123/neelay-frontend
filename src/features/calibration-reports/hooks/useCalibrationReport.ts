@@ -1,52 +1,30 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+"use client";
 
-import { calibrationReportService } from "../services";
-import { CalibrationReport } from "../types";
+import { useQuery } from "@tanstack/react-query";
 
-export function useCalibrationReport(id: number) {
-  const queryClient = useQueryClient();
+import { calibrationReportApi } from "../api/calibrationReport.api";
 
-  const query = useQuery<CalibrationReport | null, Error>({
-    queryKey: ["calibration-report", id],
+export function useCalibrationReport(
+    id: number | null,
+) {
+    return useQuery({
+        queryKey: [
+            "calibration-report",
+            id,
+        ],
 
-    queryFn: () =>
-      calibrationReportService.getCalibrationReportById(id),
+        queryFn: () => {
+            if (id === null) {
+                throw new Error(
+                    "Calibration report ID is required.",
+                );
+            }
 
-    enabled: Number.isFinite(id) && id > 0,
+            return calibrationReportApi.getReportById(id);
+        },
 
-    initialData: () => {
-      // First try the individual report cache.
-      const cachedReport =
-        queryClient.getQueryData<CalibrationReport>([
-          "calibration-report",
-          id,
-        ]);
+        enabled: id !== null,
 
-      if (cachedReport) {
-        return cachedReport;
-      }
-
-      // Then try the reports-list cache.
-      const reports =
-        queryClient.getQueryData<CalibrationReport[]>([
-          "calibration-reports",
-        ]);
-
-      return (
-        reports?.find(
-          (report) => report.id === id
-        ) ?? undefined
-      );
-    },
-
-    staleTime: 60_000,
-  });
-
-  return {
-    ...query,
-
-    // Keep the page API stable:
-    // const { report, isLoading } = useCalibrationReport(id)
-    report: query.data ?? undefined,
-  };
+        staleTime: 30_000,
+    });
 }

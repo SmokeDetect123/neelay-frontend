@@ -1,138 +1,119 @@
-import { mockServiceReports } from "../mock/serviceReports.mock";
+import { apiClient } from "@/services/api-client";
+import { API_ENDPOINTS } from "@/constants/api";
 
 import type {
     CreateServiceReportRequest,
+    PageResponse,
     ServiceReportResponse,
+    ServiceReportSearchRequest,
     UpdateServiceReportRequest,
 } from "../types/serviceReport.types";
 
 class ServiceReportService {
-    async getServiceReports(): Promise<ServiceReportResponse[]> {
-        return [...mockServiceReports];
-    }
-
-    async getServiceReportById(
-        id: number,
-    ): Promise<ServiceReportResponse | undefined> {
-        return mockServiceReports.find(
-            (report) => report.id === id,
+    /**
+     * Fetch paginated Service Reports.
+     *
+     * Backend:
+     * GET /api/service-reports?page=0&size=10
+     */
+    async getServiceReports(
+        page = 0,
+        size = 10,
+    ): Promise<PageResponse<ServiceReportResponse>> {
+        return apiClient.get<
+            PageResponse<ServiceReportResponse>
+        >(
+            API_ENDPOINTS.SERVICE_REPORTS,
+            {
+                params: {
+                    page,
+                    size,
+                },
+            },
         );
     }
 
+    /**
+     * Fetch one Service Report.
+     *
+     * Backend:
+     * GET /api/service-reports/{id}
+     */
+    async getServiceReportById(
+        id: number,
+    ): Promise<ServiceReportResponse> {
+        return apiClient.get<ServiceReportResponse>(
+            `${API_ENDPOINTS.SERVICE_REPORTS}/${id}`,
+        );
+    }
+
+    /**
+     * Create a Service Report.
+     *
+     * Backend generates:
+     * - id
+     * - reportNo
+     * - createdById
+     * - createdAt
+     * - updatedAt
+     *
+     * Backend:
+     * POST /api/service-reports
+     */
     async createServiceReport(
         request: CreateServiceReportRequest,
     ): Promise<ServiceReportResponse> {
-        const report: ServiceReportResponse = {
-            id:
-                mockServiceReports.length > 0
-                    ? Math.max(
-                          ...mockServiceReports.map(
-                              (report) => report.id,
-                          ),
-                      ) + 1
-                    : 1,
-
-            reportNumber: `SR-${String(
-                mockServiceReports.length + 1,
-            ).padStart(6, "0")}`,
-
-            customerId: request.customerId,
-
-            // Temporary values.
-            // These will come from the backend later.
-            customerName: "Unknown Customer",
-            customerAddress: "",
-
-            attendedBy: request.attendedBy,
-            attendedByName: "Unknown Engineer",
-
-            reportDate: request.reportDate,
-
-            equipment: request.equipment,
-            serialNumber: request.serialNumber,
-
-            observations: request.observations,
-            actionTaken: request.actionTaken,
-            recommendations: request.recommendations,
-
-            customerSignatureUrl:
-                request.customerSignatureUrl,
-
-            engineerSignatureUrl:
-                request.engineerSignatureUrl,
-
-            status: "OPEN",
-
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-        };
-
-        mockServiceReports.push(report);
-
-        return report;
+        return apiClient.post<
+            ServiceReportResponse,
+            CreateServiceReportRequest
+        >(
+            API_ENDPOINTS.SERVICE_REPORTS,
+            request,
+        );
     }
 
+    /**
+     * Update an existing Service Report.
+     *
+     * Backend:
+     * PUT /api/service-reports/{id}
+     */
     async updateServiceReport(
         id: number,
         request: UpdateServiceReportRequest,
     ): Promise<ServiceReportResponse> {
-        const report = mockServiceReports.find(
-            (item) => item.id === id,
+        return apiClient.put<
+            ServiceReportResponse,
+            UpdateServiceReportRequest
+        >(
+            `${API_ENDPOINTS.SERVICE_REPORTS}/${id}`,
+            request,
         );
-
-        if (!report) {
-            throw new Error(
-                "Service Report not found.",
-            );
-        }
-
-    
-
-        report.customerId = request.customerId;
-
-        report.reportDate = request.reportDate;
-
-        report.attendedBy = request.attendedBy;
-
-        report.equipment = request.equipment;
-
-        report.serialNumber =
-            request.serialNumber;
-
-        report.observations =
-            request.observations;
-
-        report.actionTaken =
-            request.actionTaken;
-
-        report.recommendations =
-            request.recommendations;
-
-        report.customerSignatureUrl =
-            request.customerSignatureUrl;
-
-        report.engineerSignatureUrl =
-            request.engineerSignatureUrl;
-
-        report.updatedAt =
-            new Date().toISOString();
-
-        return report;
     }
-    async deleteServiceReport(
-        id: number,
-    ): Promise<void> {
-        const index = mockServiceReports.findIndex(
-            (report) => report.id === id,
+
+    /**
+     * Search Service Reports.
+     *
+     * Backend:
+     * GET /api/service-reports/search
+     */
+    async searchServiceReports(
+        request: ServiceReportSearchRequest,
+        page = 0,
+        size = 10,
+    ): Promise<PageResponse<ServiceReportResponse>> {
+        return apiClient.get<
+            PageResponse<ServiceReportResponse>
+        >(
+            `${API_ENDPOINTS.SERVICE_REPORTS}/search`,
+            {
+                params: {
+                    ...request,
+                    page,
+                    size,
+                },
+            },
         );
-
-        if (index === -1) {
-            throw new Error(
-                "Service Report not found.",
-            );
-        }
-
-        mockServiceReports.splice(index, 1);
     }
 }
 

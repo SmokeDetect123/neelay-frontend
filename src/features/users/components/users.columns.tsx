@@ -4,9 +4,9 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import StatusBadge from "@/components/crud/StatusBadge";
 
-import { User } from "../types/user.types";
+import { UserResponse } from "../types/user.types";
 
-export const userColumns: ColumnDef<User>[] = [
+export const userColumns: ColumnDef<UserResponse>[] = [
     {
         accessorKey: "username",
         header: "Username",

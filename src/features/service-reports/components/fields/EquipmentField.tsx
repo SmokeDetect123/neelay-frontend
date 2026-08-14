@@ -11,29 +11,32 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
+
 import { RequiredLabel } from "@/components/forms/RequiredLabel";
 
 import type { ServiceReportFormValues } from "../../types/serviceReportForm.types";
 
 export default function EquipmentField() {
-    const form = useFormContext<ServiceReportFormValues>();
+    const form =
+        useFormContext<ServiceReportFormValues>();
 
     return (
         <FormField
             control={form.control}
-            name="equipment"
+            name="make"
             render={({ field }) => (
                 <FormItem>
                     <FormLabel>
                         <RequiredLabel>
-                            Equipment
+                            Make
                         </RequiredLabel>
                     </FormLabel>
 
                     <FormControl>
                         <Input
                             {...field}
-                            placeholder="Enter equipment name"
+                            placeholder="e.g. Dräger"
+                            autoComplete="off"
                         />
                     </FormControl>
 

@@ -60,7 +60,7 @@ export const mockCalibrationReports: CalibrationReport[] = [
 
     finalLeakTestPass: false,
 
-    overallPass: OverallResult.FAIL,
+    overallPass: false,
 
     overallComment:
       "Leak test failed. Recalibration and servicing required before certification.",

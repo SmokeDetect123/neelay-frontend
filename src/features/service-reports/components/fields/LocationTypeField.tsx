@@ -20,58 +20,62 @@ import {
 
 import { RequiredLabel } from "@/components/forms/RequiredLabel";
 
-import { useUsers } from "@/features/users/hooks/useUsers";
-
 import type { ServiceReportFormValues } from "../../types/serviceReportForm.types";
 
-export default function EngineerSelectField() {
+const LOCATION_TYPES = [
+    {
+        value: "ON_SITE",
+        label: "On Site",
+    },
+    {
+        value: "REMOTE",
+        label: "Remote",
+    },
+];
+
+export default function LocationTypeField() {
     const form =
         useFormContext<ServiceReportFormValues>();
-
-    const { users } = useUsers();
 
     return (
         <FormField
             control={form.control}
-            name="attendedBy"
+            name="locationType"
             render={({ field }) => (
                 <FormItem>
                     <FormLabel>
                         <RequiredLabel>
-                            Engineer
+                            Location
                         </RequiredLabel>
                     </FormLabel>
 
                     <Select
-                        value={
-                            field.value
-                                ? field.value.toString()
-                                : ""
-                        }
-                        onValueChange={(value) =>
-                            field.onChange(
-                                Number(value),
-                            )
-                        }
-                        onOpenChange={() => {
-                            field.onBlur();
-                        }}
+                        value={field.value}
+                        onValueChange={field.onChange}
                     >
                         <FormControl>
                             <SelectTrigger>
-                                <SelectValue placeholder="Select engineer" />
+                                <SelectValue placeholder="Select location" />
                             </SelectTrigger>
                         </FormControl>
 
                         <SelectContent>
-                            {users.map((user) => (
-                                <SelectItem
-                                    key={user.id}
-                                    value={user.id.toString()}
-                                >
-                                    {user.fullName}
-                                </SelectItem>
-                            ))}
+                            {LOCATION_TYPES.map(
+                                (location) => (
+                                    <SelectItem
+                                        key={
+                                            location.value
+                                        }
+                                        value={
+                                            location.value
+                                        }
+                                    >
+                                        {
+                                            location.label
+                                        }
+                                    </SelectItem>
+                                ),
+                            )}
                         </SelectContent>
                     </Select>
 

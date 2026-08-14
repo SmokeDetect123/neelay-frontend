@@ -28,7 +28,7 @@ export default function EditCalibrationReportPage() {
   const id = Number(params.id);
 
   const {
-    report,
+    data:report,
     isLoading,
   } = useCalibrationReport(id);
 

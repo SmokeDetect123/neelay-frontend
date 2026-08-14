@@ -3,7 +3,6 @@ import {
   ConnectorSystem,
   FillingSystem,
   GasType,
-  OverallResult,
 } from "./calibration.enums";
 
 /**

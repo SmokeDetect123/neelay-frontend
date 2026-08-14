@@ -1,44 +1,138 @@
 import { z } from "zod";
 
-export const serviceReportSchema = z.object({
-    customerId: z
-        .number()
-        .positive("Please select a customer."),
+export const serviceReportSchema =
+    z.object({
+        customerId: z
+            .number()
+            .positive(
+                "Please select a customer.",
+            ),
 
-    attendedBy: z
-        .number()
-        .positive("Please select an engineer."),
+        customerName: z
+            .string()
+            .trim()
+            .min(
+                1,
+                "Customer name is required.",
+            ),
 
-    reportDate: z
-        .string()
-        .min(1, "Report date is required."),
+        customerAddress: z
+            .string()
+            .trim(),
 
-    equipment: z
-        .string()
-        .trim()
-        .min(1, "Equipment is required.")
-        .max(100, "Equipment cannot exceed 100 characters."),
+        department: z
+            .string()
+            .trim(),
 
-    serialNumber: z
-        .string()
-        .trim()
-        .min(1, "Serial number is required.")
-        .max(100, "Serial number cannot exceed 100 characters."),
+        personContacted: z
+            .string()
+            .trim(),
 
-    observations: z
-        .string()
-        .trim()
-        .max(2000, "Observations cannot exceed 2000 characters."),
+        attendedBy: z
+            .number()
+            .positive(
+                "Please select an engineer.",
+            ),
 
-    actionTaken: z
-        .string()
-        .trim()
-        .max(2000, "Action Taken cannot exceed 2000 characters."),
+        reportDate: z
+            .string()
+            .min(
+                1,
+                "Report date is required.",
+            ),
 
-    recommendations: z
-        .string()
-        .trim()
-        .max(2000, "Recommendations cannot exceed 2000 characters."),
-});
+        make: z
+            .string()
+            .trim()
+            .min(
+                1,
+                "Make is required.",
+            )
+            .max(
+                150,
+                "Make cannot exceed 150 characters.",
+            ),
 
-export type ServiceReportSchema = z.infer<typeof serviceReportSchema>;
+        model: z
+            .string()
+            .trim()
+            .min(
+                1,
+                "Model is required.",
+            )
+            .max(
+                150,
+                "Model cannot exceed 150 characters.",
+            ),
+
+        serialNo: z
+            .string()
+            .trim()
+            .min(
+                1,
+                "Serial number is required.",
+            )
+            .max(
+                100,
+                "Serial number cannot exceed 100 characters.",
+            ),
+
+        callType: z
+            .string()
+            .min(
+                1,
+                "Call type is required.",
+            ),
+
+        locationType: z
+            .string()
+            .min(
+                1,
+                "Location is required.",
+            ),
+
+        problemDescription: z
+            .string()
+            .trim()
+            .min(
+                1,
+                "Problem description is required.",
+            )
+            .max(
+                5000,
+                "Problem description cannot exceed 5000 characters.",
+            ),
+
+        actionTaken: z
+            .string()
+            .trim()
+            .min(
+                1,
+                "Action taken is required.",
+            )
+            .max(
+                5000,
+                "Action taken cannot exceed 5000 characters.",
+            ),
+
+        materialUsed: z
+            .string()
+            .trim()
+            .max(
+                5000,
+                "Material used cannot exceed 5000 characters.",
+            ),
+
+        customerSignatureUrl: z
+            .string()
+            .trim(),
+
+        signedDate: z
+            .string()
+            .trim(),
+    });
+
+export type ServiceReportSchema =
+    z.infer<
+        typeof serviceReportSchema
+    >;

@@ -1,111 +1,97 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
+import { CheckCircle2, XCircle } from "lucide-react";
 
-import { ContentCard } from "@/components/common/ContentCard";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { CalibrationReport } from "../../types";
-
-import { DetailField } from ".";
+import type { CalibrationReport } from "../../types";
 
 interface CalibrationResultsCardProps {
-  report?: CalibrationReport;
-}
-
-function ResultBadge({
-  value,
-}: {
-  value: boolean;
-}) {
-  return (
-    <Badge
-      variant={value ? "default" : "destructive"}
-    >
-      {value ? "PASS" : "FAIL"}
-    </Badge>
-  );
+  report: CalibrationReport;
 }
 
 export default function CalibrationResultsCard({
   report,
 }: CalibrationResultsCardProps) {
-  if (!report) {
-    return (
-      <ContentCard className="p-6">
-        <h2 className="mb-6 text-lg font-semibold">
-          Calibration Results
-        </h2>
-
-        <p className="text-sm text-muted-foreground">
-          No calibration results available.
-        </p>
-      </ContentCard>
-    );
-  }
+  const overallPass = report.overallPass;
 
   return (
-    <ContentCard className="p-6">
-      <h2 className="mb-6 text-lg font-semibold">
-        Calibration Results
-      </h2>
+    <Card>
+      <CardHeader>
+        <CardTitle>Calibration Results</CardTitle>
+      </CardHeader>
 
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        <DetailField
-          label="Resistance @ 4 L/min"
-          value={report.resistance4lmin}
-        />
+      <CardContent className="space-y-6">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <ResultItem
+            label="Leak Test"
+            passed={report.leakTestPass}
+          />
 
-        <div className="space-y-1">
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Leak Test
-          </p>
+          <ResultItem
+            label="Dried Out"
+            passed={report.driedOutPass}
+          />
 
-          <ResultBadge
-            value={report.leakTestPass}
+          <ResultItem
+            label="Final Leak Test"
+            passed={report.finalLeakTestPass}
+          />
+
+          <ResultItem
+            label="Overall Result"
+            passed={overallPass}
           />
         </div>
 
-        <div className="space-y-1">
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Dried Out
-          </p>
+        {report.overallComment && (
+          <div className="rounded-lg border bg-muted/30 p-4">
+            <p className="mb-1 text-sm font-medium">
+              Overall Comment
+            </p>
 
-          <ResultBadge
-            value={report.driedOutPass}
-          />
-        </div>
+            <p className="text-sm text-muted-foreground">
+              {report.overallComment}
+            </p>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
 
-        <div className="space-y-1">
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Final Leak Test
-          </p>
+interface ResultItemProps {
+  label: string;
+  passed: boolean;
+}
 
-          <ResultBadge
-            value={report.finalLeakTestPass}
-          />
-        </div>
+function ResultItem({
+  label,
+  passed,
+}: ResultItemProps) {
+  return (
+    <div className="flex items-center justify-between rounded-lg border p-4">
+      <span className="text-sm font-medium">
+        {label}
+      </span>
 
-        <div className="space-y-1">
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Overall Result
-          </p>
-
-          <Badge
-            variant={
-              report.overallPass === "PASS"
-                ? "default"
-                : "destructive"
-            }
-          >
-            {report.overallPass}
-          </Badge>
-        </div>
-
-        <DetailField
-          label="Overall Comment"
-          value={report.overallComment}
-        />
+      <div className="flex items-center gap-2">
+        {passed ? (
+          <>
+            <CheckCircle2 className="h-4 w-4" />
+            <span className="text-sm font-medium">
+              PASS
+            </span>
+          </>
+        ) : (
+          <>
+            <XCircle className="h-4 w-4" />
+            <span className="text-sm font-medium">
+              FAIL
+            </span>
+          </>
+        )}
       </div>
-    </ContentCard>
+    </div>
   );
 }

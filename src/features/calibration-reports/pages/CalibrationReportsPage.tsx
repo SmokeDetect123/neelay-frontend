@@ -25,8 +25,28 @@ import { useCalibrationReports } from "../hooks";
 import { CalibrationStatus } from "../types";
 
 export default function CalibrationReportsPage() {
-  const { data: reports = [], isLoading, error } =
-    useCalibrationReports();
+  const {
+    data,
+    isLoading,
+    error,
+  } = useCalibrationReports();
+
+  /*
+   * The backend returns a Spring Page:
+   *
+   * {
+   *   content: CalibrationReport[],
+   *   totalElements: number,
+   *   totalPages: number,
+   *   number: number,
+   *   size: number,
+   *   first: boolean,
+   *   last: boolean
+   * }
+   *
+   * The actual reports are therefore inside `data.content`.
+   */
+  const reports = data ?? [];
 
   const [search, setSearch] = useState("");
 
@@ -34,10 +54,13 @@ export default function CalibrationReportsPage() {
     CalibrationStatus | "ALL"
   >("ALL");
 
+  /**
+   * Filter the actual report array.
+   */
   const filteredReports = useMemo(() => {
-    return reports.filter((report) => {
-      const query = search.trim().toLowerCase();
+    const query = search.trim().toLowerCase();
 
+    return reports.filter((report) => {
       const matchesSearch =
         query.length === 0 ||
         report.reportNo.toLowerCase().includes(query) ||
@@ -87,7 +110,8 @@ export default function CalibrationReportsPage() {
                 : "Unable to load calibration reports."
             }
           />
-        ) : filteredReports.length === 0 && search.trim() !== "" ? (
+        ) : filteredReports.length === 0 &&
+          search.trim() !== "" ? (
           <CalibrationReportsNoResults
             search={search}
           />

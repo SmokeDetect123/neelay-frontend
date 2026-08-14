@@ -12,7 +12,7 @@ import {
   type InstallationReportFormValues,
 } from "../../schemas";
 
-import {
+import type {
   InstallationReport,
 } from "../../types";
 
@@ -32,6 +32,47 @@ interface UseInstallationReportSubmitReturn {
   isSubmitting: boolean;
 }
 
+/**
+ * Converts the customer signature form value into
+ * the string URL expected by the backend request.
+ */
+function normalizeCustomerSignatureUrl(
+  value: string | File | undefined
+): string | undefined {
+  if (typeof value === "string") {
+    return value;
+  }
+
+  return undefined;
+}
+
+/**
+ * Converts InstallationReportFormValues into the
+ * request shape expected by the backend.
+ *
+ * Important:
+ * The form schema currently exposes lineItems[].qty
+ * as unknown, while the backend contract requires
+ * qty to be a number.
+ */
+function normalizeInstallationReportValues(
+  values: InstallationReportFormValues
+) {
+  return {
+    ...values,
+
+    customerSignatureUrl:
+      normalizeCustomerSignatureUrl(
+        values.customerSignatureUrl
+      ),
+
+    lineItems: values.lineItems.map((item) => ({
+      ...item,
+      qty: Number(item.qty),
+    })),
+  };
+}
+
 export function useInstallationReportSubmit({
   report,
   mode,
@@ -45,77 +86,77 @@ export function useInstallationReportSubmit({
   const updateMutation =
     useUpdateInstallationReport();
 
-  const onSubmit: SubmitHandler<
-    InstallationReportFormValues
-  > = async (values) => {
-    try {
-      /**
-       * -------------------------
-       * CREATE REPORT
-       * -------------------------
-       */
-      if (mode === "create") {
-        const createdReport =
-          await createMutation.mutateAsync(
-            values
+  const onSubmit: SubmitHandler<InstallationReportFormValues> =
+    async (values) => {
+      try {
+        /**
+         * Convert the form values to the backend request shape.
+         */
+        const normalizedValues =
+          normalizeInstallationReportValues(values);
+
+        /**
+         * ========================================================
+         * EDIT
+         * ========================================================
+         */
+        if (mode === "edit" && report) {
+          const updatedReport =
+            await updateMutation.mutateAsync({
+              id: report.id,
+              request: normalizedValues,
+            });
+
+          reset(values);
+
+          router.refresh();
+
+          if (!updatedReport) {
+            return;
+          }
+
+          router.replace(
+            `/installation-reports/${updatedReport.id}`
           );
 
-        reset(
-          installationReportDefaultValues
-        );
+          return;
+        }
+
+        /**
+         * ========================================================
+         * CREATE
+         * ========================================================
+         */
+        const createdReport =
+          await createMutation.mutateAsync(
+            normalizedValues
+          );
+
+        if (!createdReport) {
+          return;
+        }
+
+        reset(installationReportDefaultValues);
 
         router.refresh();
 
         router.replace(
           `/installation-reports/${createdReport.id}`
         );
-
-        return;
+      } catch (error) {
+        console.error(
+          "Failed to submit installation report:",
+          error
+        );
       }
+    };
 
-      /**
-       * -------------------------
-       * UPDATE REPORT
-       * -------------------------
-       */
-      if (!report) {
-        return;
-      }
-
-      const updatedReport =
-        await updateMutation.mutateAsync({
-          id: report.id,
-          request: values,
-        });
-
-      /**
-       * Clear dirty state by
-       * resetting to saved values.
-       */
-      reset(values);
-
-      /**
-       * Refresh App Router cache.
-       */
-      router.refresh();
-
-      /**
-       * Return to the updated
-       * report details page.
-       */
-      router.replace(
-        `/installation-reports/${updatedReport.id}`
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const isSubmitting =
+    createMutation.isPending ||
+    updateMutation.isPending;
 
   return {
     onSubmit,
-
-    isSubmitting:
-      createMutation.isPending ||
-      updateMutation.isPending,
+    isSubmitting,
   };
 }

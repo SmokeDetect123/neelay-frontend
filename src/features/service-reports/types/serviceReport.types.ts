@@ -1,77 +1,111 @@
-export type ReportStatus =
-    | "OPEN"
-    | "IN_PROGRESS"
-    | "COMPLETED";
+import type {
+    CallType,
+    LocationType,
+} from "./service-report.enums";
+
+export interface CreateServiceReportRequest {
+    reportDate: string;
+
+    customerName: string;
+    customerAddress?: string;
+    department?: string;
+    personContacted?: string;
+
+    make?: string;
+    model?: string;
+    serialNo?: string;
+
+    callType: CallType;
+
+    problemDescription?: string;
+    actionTaken?: string;
+    materialUsed?: string;
+
+    locationType?: LocationType;
+
+    customerSignatureUrl?: string;
+    signedDate?: string;
+}
+
+export interface UpdateServiceReportRequest {
+    reportDate: string;
+
+    customerName: string;
+    customerAddress?: string;
+    department?: string;
+    personContacted?: string;
+
+    make?: string;
+    model?: string;
+    serialNo?: string;
+
+    callType: CallType;
+
+    problemDescription?: string;
+    actionTaken?: string;
+    materialUsed?: string;
+
+    locationType?: LocationType;
+
+    customerSignatureUrl?: string;
+    signedDate?: string;
+}
 
 export interface ServiceReportResponse {
     id: number;
 
-    reportNumber: string;
-
-    customerId: number;
-    customerName: string;
-    customerAddress: string;
-
-    attendedBy: number;
-    attendedByName: string;
+    reportNo: string;
 
     reportDate: string;
 
-    equipment: string;
-    serialNumber: string;
+    customerName: string;
+    customerAddress?: string;
+    department?: string;
+    personContacted?: string;
 
-    observations: string;
-    actionTaken: string;
-    recommendations: string;
+    createdById: number;
+
+    make?: string;
+    model?: string;
+    serialNo?: string;
+
+    callType: CallType;
+
+    problemDescription?: string;
+    actionTaken?: string;
+    materialUsed?: string;
+
+    locationType?: LocationType;
 
     customerSignatureUrl?: string;
-    engineerSignatureUrl?: string;
-
-    status: ReportStatus;
+    signedDate?: string;
 
     createdAt: string;
     updatedAt: string;
 }
 
-/**
- * Payload used when creating a Service Report.
- */
-export interface CreateServiceReportRequest {
-    customerId: number;
-
-    reportDate: string;
-
-    attendedBy: number;
-
-    equipment: string;
-    serialNumber: string;
-
-    observations: string;
-    actionTaken: string;
-    recommendations: string;
-
-    customerSignatureUrl?: string;
-    engineerSignatureUrl?: string;
+export interface ServiceReportSearchRequest {
+    customerName?: string;
+    reportNo?: string;
+    fromDate?: string;
+    toDate?: string;
 }
 
-/**
- * Payload used when updating a Service Report.
- *
- * For this application the editable fields are the
- * same as the create request.
- *
- * The report ID is supplied through the URL:
- *
- * PUT /service-reports/{id}
- *
- * Fields such as:
- * - reportNumber
- * - status
- * - createdAt
- * - updatedAt
- *
- * are managed by the backend and are therefore not
- * included in the request body.
- */
-export type UpdateServiceReportRequest =
-    CreateServiceReportRequest;
+export interface PageResponse<T> {
+    content: T[];
+
+    totalElements: number;
+    totalPages: number;
+
+    size: number;
+    number: number;
+
+    numberOfElements: number;
+
+    first: boolean;
+    last: boolean;
+    empty: boolean;
+}
+
+export type ServiceReportTableRow =
+    ServiceReportResponse;

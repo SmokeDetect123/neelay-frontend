@@ -16,26 +16,27 @@ import { RequiredLabel } from "@/components/forms/RequiredLabel";
 
 import type { ServiceReportFormValues } from "../../types/serviceReportForm.types";
 
-export default function ReportDateField() {
+export default function ModelField() {
     const form =
         useFormContext<ServiceReportFormValues>();
 
     return (
         <FormField
             control={form.control}
-            name="reportDate"
+            name="model"
             render={({ field }) => (
                 <FormItem>
                     <FormLabel>
                         <RequiredLabel>
-                            Report Date
+                            Model
                         </RequiredLabel>
                     </FormLabel>
 
                     <FormControl>
                         <Input
-                            type="date"
                             {...field}
+                            placeholder="e.g. Vaporizer V500"
+                            autoComplete="off"
                         />
                     </FormControl>
 
