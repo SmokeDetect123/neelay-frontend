@@ -33,8 +33,7 @@ export default function InstallationReportsPage() {
   const {
     data = [],
     isLoading,
-  } =
-    useInstallationReports();
+  } = useInstallationReports();
 
   const {
     filter,
@@ -43,6 +42,12 @@ export default function InstallationReportsPage() {
   } =
     useInstallationReportFilters();
 
+  /*
+   * useInstallationReports()
+   * currently returns InstallationReport[].
+   *
+   * Do NOT use data.content here.
+   */
   const reports =
     filteredReports(data);
 
@@ -55,7 +60,6 @@ export default function InstallationReportsPage() {
           <Button asChild>
             <Link href="/installation-reports/create">
               <Plus className="mr-2 h-4 w-4" />
-
               New Report
             </Link>
           </Button>

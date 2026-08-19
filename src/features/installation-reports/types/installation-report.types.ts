@@ -1,7 +1,17 @@
-import {
+import type {
   InstallationLineItem,
 } from "./installation-line-item.types";
 
+/**
+ * Installation Report returned by the backend.
+ *
+ * Server-generated fields:
+ * - id
+ * - reportNo
+ * - createdBy
+ * - createdAt
+ * - updatedAt
+ */
 export interface InstallationReport {
   id: number;
 
@@ -17,9 +27,9 @@ export interface InstallationReport {
 
   note: string;
 
-  customerSignatureUrl: string;
+  customerSignatureUrl: string | null;
 
-  signedDate?: string;
+  signedDate: string | null;
 
   lineItems: InstallationLineItem[];
 

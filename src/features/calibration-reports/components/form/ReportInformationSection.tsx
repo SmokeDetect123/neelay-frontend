@@ -3,57 +3,67 @@
 import { useFormContext } from "react-hook-form";
 
 import {
-  FormDateInput,
-  FormInput,
+    FormDateInput,
+    FormInput,
 } from "@/components/forms";
 
 import { Badge } from "@/components/ui/badge";
 
-import { CalibrationReportFormValues } from "../../schemas";
+import type { CalibrationReportFormValues } from "../../schemas";
 
-export default function ReportInformationSection() {
-  const { control, watch } =
-    useFormContext<CalibrationReportFormValues>();
+interface ReportInformationSectionProps {
+    mode?: "create" | "edit";
+}
 
-  const status = watch("status");
+export default function ReportInformationSection({
+    mode = "create",
+}: ReportInformationSectionProps) {
+    const { control, watch } =
+        useFormContext<CalibrationReportFormValues>();
 
-  return (
-    <section className="rounded-lg border bg-card p-6">
-      <h2 className="mb-6 text-lg font-semibold">
-        Report Information
-      </h2>
+    const status = watch("status");
 
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-        <FormInput
-          control={control}
-          name="reportNo"
-          label="Report Number"
-          readOnly
-        />
+    return (
+        <section className="rounded-lg border bg-card p-6">
+            <h2 className="mb-6 text-lg font-semibold">
+                Report Information
+            </h2>
 
-        <FormDateInput
-          control={control}
-          name="reportDate"
-          label="Report Date"
-        />
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+                {mode === "edit" && (
+                    <FormInput
+                        control={control}
+                        name="reportNo"
+                        label="Report Number"
+                        disabled
+                    />
+                )}
 
-        <FormInput
-          control={control}
-          name="createdBy"
-          label="Created By"
-          readOnly
-        />
+                <FormDateInput
+                    control={control}
+                    name="reportDate"
+                    label="Report Date"
+                />
 
-        <div className="space-y-2">
-          <p className="text-sm font-medium">
-            Status
-          </p>
+                {mode === "edit" && (
+                    <FormInput
+                        control={control}
+                        name="createdBy"
+                        label="Created By"
+                        disabled
+                    />
+                )}
 
-          <Badge>
-            {status ?? "-"}
-          </Badge>
-        </div>
-      </div>
-    </section>
-  );
+                <div className="space-y-2">
+                    <p className="text-sm font-medium">
+                        Status
+                    </p>
+
+                    <Badge>
+                        {status ?? "PENDING"}
+                    </Badge>
+                </div>
+            </div>
+        </section>
+    );
 }

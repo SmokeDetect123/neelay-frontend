@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import { calibrationReportApi } from "../api/calibrationReport.api";
+import { calibrationReportApi } from "../api";
 
 export function useCalibrationReports(
     page = 0,

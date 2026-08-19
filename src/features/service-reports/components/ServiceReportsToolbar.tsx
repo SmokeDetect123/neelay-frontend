@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Plus } from "lucide-react";
 
 import Toolbar from "@/components/common/Toolbar";
@@ -11,9 +12,11 @@ export default function ServiceReportsToolbar() {
             title="Service Reports"
             description="Manage all customer service reports."
             actions={
-                <Button>
-                    <Plus className="mr-2 h-4 w-4" />
-                    New Service Report
+                <Button asChild>
+                    <Link href="/service-reports/new">
+                        <Plus className="mr-2 h-4 w-4" />
+                        New Service Report
+                    </Link>
                 </Button>
             }
         />

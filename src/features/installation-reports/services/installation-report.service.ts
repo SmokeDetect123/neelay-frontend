@@ -1,4 +1,4 @@
-import {
+import type {
   InstallationFilter,
   InstallationReport,
   CreateInstallationReportRequest,
@@ -14,59 +14,56 @@ class InstallationReportService {
     ...mockInstallationReports,
   ];
 
-  /**
-   * Returns all installation reports.
-   */
-  async getInstallationReports(): Promise<InstallationReport[]> {
+  async getInstallationReports(): Promise<
+    InstallationReport[]
+  > {
     return [...this.reports];
   }
 
-  /**
-   * Returns a single installation report.
-   */
   async getInstallationReportById(
-    id: number
+    id: number,
   ): Promise<InstallationReport | null> {
     return (
       this.reports.find(
-        (report) => report.id === id
+        (report) =>
+          report.id === id,
       ) ?? null
     );
   }
 
-  /**
-   * Creates a new installation report.
-   */
   async createInstallationReport(
-    request: CreateInstallationReportRequest
+    request: CreateInstallationReportRequest,
   ): Promise<InstallationReport> {
     const nextReportId =
       this.reports.length > 0
         ? Math.max(
             ...this.reports.map(
-              (report) => report.id
-            )
+              (report) => report.id,
+            ),
           ) + 1
         : 1;
 
     let nextLineItemId =
       Math.max(
         0,
-        ...this.reports.flatMap((report) =>
-          report.lineItems.map(
-            (item) => item.id
-          )
-        )
+        ...this.reports.flatMap(
+          (report) =>
+            report.lineItems.map(
+              (item) => item.id,
+            ),
+        ),
       ) + 1;
 
     const report: InstallationReport = {
       id: nextReportId,
 
-      reportNo: `IR-${nextReportId
-        .toString()
-        .padStart(6, "0")}`,
+      reportNo:
+        `IR-${nextReportId
+          .toString()
+          .padStart(6, "0")}`,
 
-      reportDate: request.reportDate,
+      reportDate:
+        request.reportDate,
 
       customerName:
         request.customerName,
@@ -74,16 +71,18 @@ class InstallationReportService {
       customerAddress:
         request.customerAddress ?? "",
 
-      createdBy: "Administrator",
+      createdBy:
+        "Administrator",
 
       note:
         request.note ?? "",
 
       customerSignatureUrl:
-        request.customerSignatureUrl ?? "",
+        request.customerSignatureUrl ??
+        null,
 
       signedDate:
-        request.signedDate,
+        request.signedDate ?? null,
 
       createdAt:
         new Date().toISOString(),
@@ -95,25 +94,15 @@ class InstallationReportService {
         request.lineItems.map(
           (item) => ({
             id: nextLineItemId++,
-
             make: item.make,
-
             model: item.model,
-
             fabricationNo:
               item.fabricationNo,
-
-            fitting:
-              item.fitting,
-
+            fitting: item.fitting,
             qty: item.qty,
-
-            agent:
-              item.agent,
-
-            remarks:
-              item.remarks,
-          })
+            agent: item.agent,
+            remarks: item.remarks,
+          }),
         ),
     };
 
@@ -122,16 +111,14 @@ class InstallationReportService {
     return report;
   }
 
-  /**
-   * Updates an existing report.
-   */
   async updateInstallationReport(
     id: number,
-    request: UpdateInstallationReportRequest
+    request: UpdateInstallationReportRequest,
   ): Promise<InstallationReport | null> {
     const index =
       this.reports.findIndex(
-        (report) => report.id === id
+        (report) =>
+          report.id === id,
       );
 
     if (index === -1) {
@@ -144,11 +131,12 @@ class InstallationReportService {
     let nextLineItemId =
       Math.max(
         0,
-        ...this.reports.flatMap((report) =>
-          report.lineItems.map(
-            (item) => item.id
-          )
-        )
+        ...this.reports.flatMap(
+          (report) =>
+            report.lineItems.map(
+              (item) => item.id,
+            ),
+        ),
       ) + 1;
 
     this.reports[index] = {
@@ -182,27 +170,16 @@ class InstallationReportService {
         request.lineItems?.map(
           (item) => ({
             id: nextLineItemId++,
-
             make: item.make,
-
             model: item.model,
-
             fabricationNo:
               item.fabricationNo,
-
-            fitting:
-              item.fitting,
-
+            fitting: item.fitting,
             qty: item.qty,
-
-            agent:
-              item.agent,
-
-            remarks:
-              item.remarks,
-          })
-        ) ??
-        existing.lineItems,
+            agent: item.agent,
+            remarks: item.remarks,
+          }),
+        ) ?? existing.lineItems,
 
       updatedAt:
         new Date().toISOString(),
@@ -211,15 +188,13 @@ class InstallationReportService {
     return this.reports[index];
   }
 
-  /**
-   * Deletes a report.
-   */
   async deleteInstallationReport(
-    id: number
+    id: number,
   ): Promise<boolean> {
     const index =
       this.reports.findIndex(
-        (report) => report.id === id
+        (report) =>
+          report.id === id,
       );
 
     if (index === -1) {
@@ -231,11 +206,8 @@ class InstallationReportService {
     return true;
   }
 
-  /**
-   * Client-side filtering.
-   */
   async searchInstallationReports(
-    filter: InstallationFilter
+    filter: InstallationFilter,
   ): Promise<InstallationReport[]> {
     let reports = [
       ...this.reports,
@@ -245,70 +217,76 @@ class InstallationReportService {
       const value =
         filter.customerName.toLowerCase();
 
-      reports = reports.filter(
-        (report) =>
-          report.customerName
-            .toLowerCase()
-            .includes(value)
-      );
+      reports =
+        reports.filter(
+          (report) =>
+            report.customerName
+              .toLowerCase()
+              .includes(value),
+        );
     }
 
     if (filter.reportNo) {
       const value =
         filter.reportNo.toLowerCase();
 
-      reports = reports.filter(
-        (report) =>
-          report.reportNo
-            .toLowerCase()
-            .includes(value)
-      );
+      reports =
+        reports.filter(
+          (report) =>
+            report.reportNo
+              .toLowerCase()
+              .includes(value),
+        );
     }
 
     if (filter.make) {
       const value =
         filter.make.toLowerCase();
 
-      reports = reports.filter(
-        (report) =>
-          report.lineItems.some(
-            (item) =>
-              item.make
-                .toLowerCase()
-                .includes(value)
-          )
-      );
+      reports =
+        reports.filter(
+          (report) =>
+            report.lineItems.some(
+              (item) =>
+                (item.make ?? "")
+                  .toLowerCase()
+                  .includes(value),
+            ),
+        );
     }
 
     if (filter.fabricationNo) {
       const value =
         filter.fabricationNo.toLowerCase();
 
-      reports = reports.filter(
-        (report) =>
-          report.lineItems.some(
-            (item) =>
-              item.fabricationNo
-                .toLowerCase()
-                .includes(value)
-          )
-      );
+      reports =
+        reports.filter(
+          (report) =>
+            report.lineItems.some(
+              (item) =>
+                (item.fabricationNo ?? "")
+                  .toLowerCase()
+                  .includes(value),
+            ),
+        );
     }
 
     if (filter.fromDate) {
-      reports = reports.filter(
-        (report) =>
-          report.reportDate >=
-          filter.fromDate!
-      );
+      reports =
+        reports.filter(
+          (report) =>
+            report.reportDate >=
+            filter.fromDate!,
+        );
     }
 
     if (filter.toDate) {
-      reports = reports.filter(
-        (report) =>
-          report.reportDate <=
-          filter.toDate!
-      );
+      reports =
+        reports.filter(
+          (report) =>
+            report.reportDate <=
+            filter.toDate!,
+        );
     }
 
     return reports;

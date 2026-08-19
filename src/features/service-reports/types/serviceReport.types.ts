@@ -3,6 +3,10 @@ import type {
     LocationType,
 } from "./service-report.enums";
 
+/**
+ * Request payload accepted by POST /api/service-reports.
+ * Mirrors CreateServiceReportRequest.java.
+ */
 export interface CreateServiceReportRequest {
     reportDate: string;
 
@@ -27,6 +31,10 @@ export interface CreateServiceReportRequest {
     signedDate?: string;
 }
 
+/**
+ * Request payload accepted by PUT /api/service-reports/{id}.
+ * Mirrors UpdateServiceReportRequest.java.
+ */
 export interface UpdateServiceReportRequest {
     reportDate: string;
 
@@ -51,11 +59,13 @@ export interface UpdateServiceReportRequest {
     signedDate?: string;
 }
 
+/**
+ * Response returned by the backend.
+ * Mirrors ServiceReportResponse.java.
+ */
 export interface ServiceReportResponse {
     id: number;
-
     reportNo: string;
-
     reportDate: string;
 
     customerName: string;
@@ -84,6 +94,10 @@ export interface ServiceReportResponse {
     updatedAt: string;
 }
 
+/**
+ * Query parameters accepted by GET /api/service-reports/search.
+ * Mirrors ServiceReportSearchRequest.java.
+ */
 export interface ServiceReportSearchRequest {
     customerName?: string;
     reportNo?: string;
@@ -91,21 +105,19 @@ export interface ServiceReportSearchRequest {
     toDate?: string;
 }
 
+/**
+ * Spring Data page response used by Service Reports.
+ */
 export interface PageResponse<T> {
     content: T[];
-
     totalElements: number;
     totalPages: number;
-
     size: number;
     number: number;
-
     numberOfElements: number;
-
     first: boolean;
     last: boolean;
     empty: boolean;
 }
 
-export type ServiceReportTableRow =
-    ServiceReportResponse;
+export type ServiceReportTableRow = ServiceReportResponse;

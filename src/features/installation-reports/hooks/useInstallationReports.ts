@@ -6,13 +6,23 @@ import {
   installationReportApi,
 } from "../api";
 
-export function useInstallationReports() {
+export function useInstallationReports(
+  page = 0,
+  size = 10,
+) {
   return useQuery({
-    queryKey: ["installation-reports"],
+    queryKey: [
+      "installation-reports",
+      page,
+      size,
+    ],
 
     queryFn: () =>
-      installationReportApi.getReports(),
+      installationReportApi.getReports(
+        page,
+        size,
+      ),
 
-    staleTime: 60_000,
+    staleTime: 30_000,
   });
 }

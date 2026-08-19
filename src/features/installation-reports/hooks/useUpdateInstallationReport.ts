@@ -33,24 +33,41 @@ export function useUpdateInstallationReport() {
     }: UpdateInstallationReportMutation) =>
       installationReportApi.updateReport(
         id,
-        request
+        request,
       ),
 
     onSuccess: (
-      updatedReport
+      updatedReport,
     ) => {
+      /*
+       * updateReport() can return null
+       * when the report does not exist.
+       *
+       * Do not access updatedReport.id
+       * until null has been eliminated.
+       */
       if (!updatedReport) {
+        toast.error(
+          "Installation report could not be updated because it was not found.",
+        );
+
         return;
       }
 
+      /*
+       * Update the individual report cache.
+       */
       queryClient.setQueryData(
         [
           "installation-report",
           updatedReport.id,
         ],
-        updatedReport
+        updatedReport,
       );
 
+      /*
+       * Update the installation report list cache.
+       */
       queryClient.setQueryData<
         InstallationReport[]
       >(
@@ -58,19 +75,23 @@ export function useUpdateInstallationReport() {
           "installation-reports",
         ],
         (
-          old = []
+          old = [],
         ) =>
           old.map(
             (
-              report
+              report,
             ) =>
               report.id ===
               updatedReport.id
                 ? updatedReport
-                : report
-          )
+                : report,
+          ),
       );
 
+      /*
+       * Statistics depend on
+       * the installation report collection.
+       */
       queryClient.invalidateQueries({
         queryKey: [
           "installation-statistics",
@@ -78,13 +99,17 @@ export function useUpdateInstallationReport() {
       });
 
       toast.success(
-        "Installation report updated successfully."
+        "Installation report updated successfully.",
       );
     },
 
-    onError: () => {
+    onError: (
+      error,
+    ) => {
       toast.error(
-        "Failed to update installation report."
+        error instanceof Error
+          ? error.message
+          : "Failed to update installation report.",
       );
     },
   });

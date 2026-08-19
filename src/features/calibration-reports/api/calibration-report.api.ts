@@ -1,68 +1,99 @@
-import {
-  CalibrationFilter,
-  CalibrationReport,
-  CreateCalibrationReportRequest,
-  UpdateCalibrationReportRequest,
+import { apiClient } from "@/services/api-client";
+import { API_ENDPOINTS } from "@/constants/api";
+
+import type {
+    CalibrationReport,
+    CalibrationReportPage,
+    CalibrationReportSearchRequest,
+    CreateCalibrationReportRequest,
+    UpdateCalibrationReportRequest,
 } from "../types";
 
-import { calibrationReportService } from "../services/calibration-report.service";
+export interface CalibrationReportListParams {
+    page?: number;
+    size?: number;
+}
 
-/**
- * ============================================================================
- * Calibration Report API
- *
- * During mock development this delegates to the mock service.
- *
- * During backend integration ONLY THIS FILE should change to Axios.
- * ============================================================================
- */
 class CalibrationReportApi {
-  async getReports(): Promise<CalibrationReport[]> {
-    return calibrationReportService.getCalibrationReports();
-  }
+    /**
+     * GET /api/calibration-reports?page=0&size=10
+     */
+    async getReports(
+        params: CalibrationReportListParams = {},
+    ): Promise<CalibrationReportPage> {
+        return apiClient.get<CalibrationReportPage>(
+            API_ENDPOINTS.CALIBRATION_REPORTS,
+            {
+                params: {
+                    page: params.page ?? 0,
+                    size: params.size ?? 10,
+                },
+            },
+        );
+    }
 
-  async getReport(
-    id: number
-  ): Promise<CalibrationReport | null> {
-    return calibrationReportService.getCalibrationReportById(
-      id
-    );
-  }
+    /**
+     * GET /api/calibration-reports/{id}
+     */
+    async getReportById(
+        id: number,
+    ): Promise<CalibrationReport> {
+        return apiClient.get<CalibrationReport>(
+            `${API_ENDPOINTS.CALIBRATION_REPORTS}/${id}`,
+        );
+    }
 
-  async createReport(
-    request: CreateCalibrationReportRequest
-  ): Promise<CalibrationReport> {
-    return calibrationReportService.createCalibrationReport(
-      request
-    );
-  }
+    /**
+     * POST /api/calibration-reports
+     */
+    async createReport(
+        request: CreateCalibrationReportRequest,
+    ): Promise<CalibrationReport> {
+        return apiClient.post<
+            CalibrationReport,
+            CreateCalibrationReportRequest
+        >(
+            API_ENDPOINTS.CALIBRATION_REPORTS,
+            request,
+        );
+    }
 
-  async updateReport(
-    id: number,
-    request: UpdateCalibrationReportRequest
-  ): Promise<CalibrationReport | null> {
-    return calibrationReportService.updateCalibrationReport(
-      id,
-      request
-    );
-  }
+    /**
+     * PUT /api/calibration-reports/{id}
+     */
+    async updateReport(
+        id: number,
+        request: UpdateCalibrationReportRequest,
+    ): Promise<CalibrationReport> {
+        return apiClient.put<
+            CalibrationReport,
+            UpdateCalibrationReportRequest
+        >(
+            `${API_ENDPOINTS.CALIBRATION_REPORTS}/${id}`,
+            request,
+        );
+    }
 
-  async deleteReport(
-    id: number
-  ): Promise<boolean> {
-    return calibrationReportService.deleteCalibrationReport(
-      id
-    );
-  }
-
-  async searchReports(
-    filter: CalibrationFilter
-  ): Promise<CalibrationReport[]> {
-    return calibrationReportService.searchCalibrationReports(
-      filter
-    );
-  }
+    /**
+     * GET /api/calibration-reports/search
+     */
+    async searchReports(
+        request: CalibrationReportSearchRequest,
+        page = 0,
+        size = 10,
+    ): Promise<CalibrationReportPage> {
+        return apiClient.get<CalibrationReportPage>(
+            `${API_ENDPOINTS.CALIBRATION_REPORTS}/search`,
+            {
+                params: {
+                    ...request,
+                    page,
+                    size,
+                },
+            },
+        );
+    }
 }
 
 export const calibrationReportApi =
-  new CalibrationReportApi();
+    new CalibrationReportApi();

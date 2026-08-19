@@ -7,11 +7,9 @@ import {
 
 import { toast } from "sonner";
 
-import {
-  calibrationReportApi,
-} from "../api";
+import { calibrationReportApi } from "../api";
 
-import {
+import type {
   CalibrationReport,
   UpdateCalibrationReportRequest,
 } from "../types";
@@ -22,56 +20,41 @@ interface UpdateCalibrationReportMutation {
 }
 
 export function useUpdateCalibrationReport() {
-  const queryClient =
-    useQueryClient();
+  const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: ({
-      id,
-      request,
-    }: UpdateCalibrationReportMutation) =>
+  return useMutation<
+    CalibrationReport,
+    Error,
+    UpdateCalibrationReportMutation
+  >({
+    mutationFn: ({ id, request }) =>
       calibrationReportApi.updateReport(
         id,
-        request
+        request,
       ),
 
     onSuccess: (updatedReport) => {
-      if (!updatedReport) {
-        return;
-      }
-
       queryClient.setQueryData(
         [
           "calibration-report",
           updatedReport.id,
         ],
-        updatedReport
-      );
-
-      queryClient.setQueryData<CalibrationReport[]>(
-        ["calibration-reports"],
-        (old = []) =>
-          old.map((report) =>
-            report.id === updatedReport.id
-              ? updatedReport
-              : report
-          )
+        updatedReport,
       );
 
       queryClient.invalidateQueries({
-        queryKey: [
-          "calibration-report-statistics",
-        ],
+        queryKey: ["calibration-reports"],
       });
 
       toast.success(
-        "Calibration report updated successfully."
+        "Calibration report updated successfully.",
       );
     },
 
-    onError: () => {
+    onError: (error) => {
       toast.error(
-        "Failed to update calibration report."
+        error.message ||
+          "Failed to update calibration report.",
       );
     },
   });

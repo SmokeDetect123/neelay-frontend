@@ -1,5 +1,6 @@
 "use client";
 
+import { useCustomers } from "@/features/customers/hooks/useCustomers";
 import { useFormContext } from "react-hook-form";
 
 import {
@@ -20,8 +21,6 @@ import {
 
 import { RequiredLabel } from "@/components/forms/RequiredLabel";
 
-import { useCustomers } from "@/features/customers/hooks/useCustomers";
-
 import type { ServiceReportFormValues } from "../../types/serviceReportForm.types";
 
 export default function CustomerSelectField() {
@@ -33,7 +32,7 @@ export default function CustomerSelectField() {
     return (
         <FormField
             control={form.control}
-            name="customerId"
+            name="customerName"
             render={({ field }) => (
                 <FormItem>
                     <FormLabel>
@@ -43,36 +42,8 @@ export default function CustomerSelectField() {
                     </FormLabel>
 
                     <Select
-                        value={
-                            field.value
-                                ? field.value.toString()
-                                : ""
-                        }
-                        onValueChange={(value) => {
-                            const customerId =
-                                Number(value);
-
-                            field.onChange(
-                                customerId,
-                            );
-
-                            const customer =
-                                customers.find(
-                                    (item) =>
-                                        item.id ===
-                                        customerId,
-                                );
-
-                            if (customer) {
-                                form.setValue(
-                                    "customerName",
-                                    customer.name,
-                                );
-                            }
-                        }}
-                        onOpenChange={() => {
-                            field.onBlur();
-                        }}
+                        value={field.value ?? ""}
+                        onValueChange={field.onChange}
                     >
                         <FormControl>
                             <SelectTrigger>
@@ -84,10 +55,8 @@ export default function CustomerSelectField() {
                             {customers.map(
                                 (customer) => (
                                     <SelectItem
-                                        key={
-                                            customer.id
-                                        }
-                                        value={customer.id.toString()}
+                                        key={customer.id}
+                                        value={customer.name}
                                     >
                                         {customer.name}
                                     </SelectItem>

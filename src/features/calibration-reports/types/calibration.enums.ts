@@ -36,3 +36,17 @@ export enum ConnectorSystem {
   BULLNOSE = "BULLNOSE",
   QUICK_CONNECT = "QUICK_CONNECT",
 }
+
+export function getCalibrationStatus(
+    overallPass: boolean | null | undefined,
+): CalibrationStatus {
+    if (overallPass === true) {
+        return CalibrationStatus.PASS;
+    }
+
+    if (overallPass === false) {
+        return CalibrationStatus.FAIL;
+    }
+
+    return CalibrationStatus.PENDING;
+}

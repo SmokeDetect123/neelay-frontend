@@ -1,11 +1,9 @@
-export * from "./useInstallationReports";
+export { useInstallationReports } from "./useInstallationReports";
 
-export * from "./useInstallationReport";
+export { useInstallationReport } from "./useInstallationReport";
 
-export * from "./useCreateInstallationReport";
+export { useCreateInstallationReport } from "./useCreateInstallationReport";
 
-export * from "./useUpdateInstallationReport";
+export { useUpdateInstallationReport } from "./useUpdateInstallationReport";
 
-export * from "./useDeleteInstallationReport";
-
-export * from "./useInstallationStatistics";
+export { useInstallationStatistics } from "./useInstallationStatistics";

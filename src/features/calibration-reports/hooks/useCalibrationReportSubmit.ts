@@ -7,7 +7,7 @@ import {
   useUpdateCalibrationReport,
 } from ".";
 
-import {
+import type {
   CalibrationReport,
   UpdateCalibrationReportMutation,
 } from "../types";

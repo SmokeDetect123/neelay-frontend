@@ -76,17 +76,5 @@ export const calibrationReportColumns: ColumnDef<CalibrationReport>[] = [
     },
   },
 
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => {
-      const status = row.original.status;
-
-      return (
-        <Badge variant="outline">
-          {String(status).replaceAll("_", " ")}
-        </Badge>
-      );
-    },
-  },
+  
 ];

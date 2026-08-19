@@ -14,7 +14,7 @@ interface CalibrationSignatureCardProps {
 
 interface SignaturePreviewProps {
   title: string;
-  signatureUrl?: string;
+  signatureUrl?: string | null;
 }
 
 function SignaturePreview({

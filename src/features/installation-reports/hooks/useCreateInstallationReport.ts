@@ -11,9 +11,8 @@ import {
   installationReportApi,
 } from "../api";
 
-import {
+import type {
   CreateInstallationReportRequest,
-  InstallationReport,
 } from "../types";
 
 export function useCreateInstallationReport() {
@@ -22,36 +21,32 @@ export function useCreateInstallationReport() {
 
   return useMutation({
     mutationFn: (
-      request: CreateInstallationReportRequest
+      request: CreateInstallationReportRequest,
     ) =>
       installationReportApi.createReport(
-        request
+        request,
       ),
 
     onSuccess: (
-      createdReport
+      createdReport,
     ) => {
       queryClient.setQueryData(
         [
           "installation-report",
           createdReport.id,
         ],
-        createdReport
+        createdReport,
       );
 
-      queryClient.setQueryData<
-        InstallationReport[]
-      >(
-        [
+      /*
+       * The list cache is a Spring Page.
+       * Let the backend provide the new page state.
+       */
+      queryClient.invalidateQueries({
+        queryKey: [
           "installation-reports",
         ],
-        (
-          old = []
-        ) => [
-          ...old,
-          createdReport,
-        ]
-      );
+      });
 
       queryClient.invalidateQueries({
         queryKey: [
@@ -60,16 +55,16 @@ export function useCreateInstallationReport() {
       });
 
       toast.success(
-        "Installation report created successfully."
+        "Installation report created successfully.",
       );
     },
 
     onError: (
-      error: Error
+      error: Error,
     ) => {
       toast.error(
-        error.message ??
-          "Failed to create installation report."
+        error.message ||
+          "Failed to create installation report.",
       );
     },
   });

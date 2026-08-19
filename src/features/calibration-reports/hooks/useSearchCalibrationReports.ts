@@ -2,15 +2,17 @@ import { useQuery } from "@tanstack/react-query";
 
 import { calibrationReportApi } from "../api";
 
-import { CalibrationFilter } from "../types";
+import type {
+  CalibrationReportSearchRequest,
+} from "../types";
 
 export function useSearchCalibrationReports(
-  filter: CalibrationFilter
+  request: CalibrationReportSearchRequest,
 ) {
   return useQuery({
-    queryKey: ["calibration-search", filter],
+    queryKey: ["calibration-search", request],
 
     queryFn: () =>
-      calibrationReportApi.searchReports(filter),
+      calibrationReportApi.searchReports(request),
   });
 }

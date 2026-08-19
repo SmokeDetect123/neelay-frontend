@@ -1,7 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-
 import { ContentCard } from "@/components/common/ContentCard";
 
 import { CalibrationReport } from "../../types";
@@ -51,15 +49,7 @@ export default function ReportInformationCard({
           value={report.createdBy}
         />
 
-        <div className="space-y-1">
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Status
-          </p>
-
-          <Badge>
-            {report.status}
-          </Badge>
-        </div>
+        
 
         <DetailField
           label="Created At"

@@ -14,7 +14,7 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 
-import {
+import type {
   InstallationReport,
 } from "../../../types";
 
@@ -22,15 +22,17 @@ interface SignatureCardProps {
   report: InstallationReport;
 }
 
+interface DetailFieldProps {
+  icon: React.ElementType;
+  label: string;
+  value?: string | null;
+}
+
 function DetailField({
   icon: Icon,
   label,
   value,
-}: {
-  icon: React.ElementType;
-  label: string;
-  value?: string;
-}) {
+}: DetailFieldProps) {
   return (
     <div className="space-y-1">
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -49,14 +51,13 @@ export default function SignatureCard({
   report,
 }: SignatureCardProps) {
   const hasSignature =
-    !!report.customerSignatureUrl;
+    Boolean(report.customerSignatureUrl);
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <FileSignature className="h-5 w-5" />
-
           Customer Signature
         </CardTitle>
       </CardHeader>
@@ -89,7 +90,9 @@ export default function SignatureCard({
         <DetailField
           icon={FileSignature}
           label="Signature URL"
-          value={report.customerSignatureUrl}
+          value={
+            report.customerSignatureUrl
+          }
         />
       </CardContent>
     </Card>

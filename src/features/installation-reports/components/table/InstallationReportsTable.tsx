@@ -16,15 +16,12 @@ import {
 } from "@/components/ui/table";
 
 import {
-  useDeleteInstallationReport,
-} from "../../hooks";
-
-import {
   InstallationReport,
 } from "../../types";
 
 import InstallationEmptyState from "./InstallationEmptyState";
 import InstallationLoading from "./InstallationLoading";
+
 import {
   installationTableColumns,
 } from "./InstallationTableColumns";
@@ -39,18 +36,12 @@ export default function InstallationReportsTable({
   reports,
   isLoading,
 }: InstallationReportsTableProps) {
-  const deleteMutation =
-    useDeleteInstallationReport();
-
   const table =
     useReactTable({
       data: reports,
 
       columns:
-        installationTableColumns(
-          (id) =>
-            deleteMutation.mutate(id)
-        ),
+        installationTableColumns(),
 
       getCoreRowModel:
         getCoreRowModel(),
@@ -71,18 +62,24 @@ export default function InstallationReportsTable({
           {table
             .getHeaderGroups()
             .map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow
+                key={headerGroup.id}
+              >
                 {headerGroup.headers.map(
                   (header) => (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
+                            header.column
+                              .columnDef
+                              .header,
+                            header.getContext(),
                           )}
                     </TableHead>
-                  )
+                  ),
                 )}
               </TableRow>
             ))}
@@ -91,15 +88,22 @@ export default function InstallationReportsTable({
         <TableBody>
           {table
             .getRowModel()
-            .rows.map((row) => (
-              <TableRow key={row.id}>
+            .rows
+            .map((row) => (
+              <TableRow
+                key={row.id}
+              >
                 {row
                   .getVisibleCells()
                   .map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                    >
                       {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.column
+                          .columnDef
+                          .cell,
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -109,4 +113,4 @@ export default function InstallationReportsTable({
       </Table>
     </div>
   );
-}   
+}

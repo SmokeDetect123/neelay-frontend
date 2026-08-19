@@ -15,7 +15,7 @@ import {
   type InstallationReportFormValues,
 } from "../../schemas";
 
-import {
+import type {
   InstallationReport,
 } from "../../types";
 
@@ -30,12 +30,10 @@ import {
   SignatureSection,
 } from "./sections";
 
-import InstallationReportFormFooter
-from "./InstallationReportFormFooter";
+import InstallationReportFormFooter from "./InstallationReportFormFooter";
 
 interface InstallationReportFormProps {
   report?: InstallationReport;
-
   mode?: "create" | "edit";
 }
 
@@ -44,13 +42,9 @@ export default function InstallationReportForm({
   mode = "create",
 }: InstallationReportFormProps) {
   const methods =
-    useForm<
-      InstallationReportFormValues,
-      unknown,
-      InstallationReportFormValues
-    >({
+    useForm<InstallationReportFormValues>({
       resolver: zodResolver(
-        installationReportSchema
+        installationReportSchema,
       ),
 
       defaultValues:
@@ -80,7 +74,7 @@ export default function InstallationReportForm({
   useEffect(() => {
     if (mode !== "edit") {
       reset(
-        installationReportDefaultValues
+        installationReportDefaultValues,
       );
 
       return;
@@ -104,35 +98,23 @@ export default function InstallationReportForm({
         report.note,
 
       customerSignatureUrl:
-        report.customerSignatureUrl,
+        report.customerSignatureUrl ?? "",
 
       signedDate:
-        report.signedDate,
+        report.signedDate ?? "",
 
       lineItems:
         report.lineItems.map(
           (item) => ({
-            make:
-              item.make,
-
-            model:
-              item.model,
-
+            make: item.make,
+            model: item.model,
             fabricationNo:
               item.fabricationNo,
-
-            fitting:
-              item.fitting,
-
-            qty:
-              item.qty,
-
-            agent:
-              item.agent,
-
-            remarks:
-              item.remarks,
-          })
+            fitting: item.fitting,
+            qty: item.qty,
+            agent: item.agent,
+            remarks: item.remarks,
+          }),
         ),
     });
   }, [
@@ -140,6 +122,45 @@ export default function InstallationReportForm({
     report,
     reset,
   ]);
+
+  const resetValues =
+    mode === "create"
+      ? installationReportDefaultValues
+      : {
+          reportDate:
+            report?.reportDate ?? "",
+
+          customerName:
+            report?.customerName ?? "",
+
+          customerAddress:
+            report?.customerAddress ?? "",
+
+          note:
+            report?.note ?? "",
+
+          customerSignatureUrl:
+            report?.customerSignatureUrl ??
+            "",
+
+          signedDate:
+            report?.signedDate ?? "",
+
+          lineItems:
+            report?.lineItems.map(
+              (item) => ({
+                make: item.make,
+                model: item.model,
+                fabricationNo:
+                  item.fabricationNo,
+                fitting: item.fitting,
+                qty: item.qty,
+                agent: item.agent,
+                remarks: item.remarks,
+              }),
+            ) ??
+            installationReportDefaultValues.lineItems,
+        };
 
   return (
     <FormProvider {...methods}>
@@ -159,69 +180,10 @@ export default function InstallationReportForm({
 
         <InstallationReportFormFooter
           mode={mode}
-          isSubmitting={
-            isSubmitting
-          }
-          isDirty={
-            formState.isDirty
-          }
+          isSubmitting={isSubmitting}
+          isDirty={formState.isDirty}
           onReset={() =>
-            reset(
-              mode === "create"
-                ? installationReportDefaultValues
-                : {
-                    reportDate:
-                      report?.reportDate ??
-                      "",
-
-                    customerName:
-                      report?.customerName ??
-                      "",
-
-                    customerAddress:
-                      report?.customerAddress ??
-                      "",
-
-                    note:
-                      report?.note ??
-                      "",
-
-                    customerSignatureUrl:
-                      report?.customerSignatureUrl ??
-                      "",
-
-                    signedDate:
-                      report?.signedDate ??
-                      "",
-
-                    lineItems:
-                      report?.lineItems.map(
-                        (item) => ({
-                          make:
-                            item.make,
-
-                          model:
-                            item.model,
-
-                          fabricationNo:
-                            item.fabricationNo,
-
-                          fitting:
-                            item.fitting,
-
-                          qty:
-                            item.qty,
-
-                          agent:
-                            item.agent,
-
-                          remarks:
-                            item.remarks,
-                        })
-                      ) ??
-                      installationReportDefaultValues.lineItems,
-                  }
-            )
+            reset(resetValues)
           }
         />
       </form>

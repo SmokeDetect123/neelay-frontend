@@ -1,97 +1,139 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
+import type {
+  ColumnDef,
+} from "@tanstack/react-table";
 
-import { Badge } from "@/components/ui/badge";
+import {
+  Badge,
+} from "@/components/ui/badge";
 
 import {
   InstallationReport,
 } from "../../types";
 
 import InstallationTableActions
-from "./InstallationTableActions";
+  from "./InstallationTableActions";
 
-export const installationTableColumns = (
-  onDelete?: (id: number) => void
-): ColumnDef<InstallationReport>[] => [
-  {
-    accessorKey: "reportNo",
-    header: "Report No.",
-  },
+export const installationTableColumns =
+  (): ColumnDef<InstallationReport>[] => [
+    {
+      accessorKey:
+        "reportNo",
 
-  {
-    accessorKey: "reportDate",
-    header: "Report Date",
-  },
+      header:
+        "Report No.",
+    },
 
-  {
-    accessorKey: "customerName",
-    header: "Customer",
-  },
+    {
+      accessorKey:
+        "reportDate",
 
-  {
-    id: "equipment",
+      header:
+        "Report Date",
+    },
 
-    header: "Equipment",
+    {
+      accessorKey:
+        "customerName",
 
-    cell: ({ row }) => (
-      <div className="space-y-1">
-        {row.original.lineItems.map(
-          (item) => (
-            <div key={item.id}>
-              {item.make} {item.model}
-            </div>
-          )
-        )}
-      </div>
-    ),
-  },
+      header:
+        "Customer",
+    },
 
-  {
-    id: "fabrication",
+    {
+      id:
+        "equipment",
 
-    header: "Fabrication No.",
+      header:
+        "Equipment",
 
-    cell: ({ row }) => (
-      <div className="space-y-1">
-        {row.original.lineItems.map(
-          (item) => (
-            <div key={item.id}>
-              {item.fabricationNo}
-            </div>
-          )
-        )}
-      </div>
-    ),
-  },
+      cell: ({
+        row,
+      }) => (
+        <div className="space-y-1">
+          {row.original.lineItems.map(
+            (item) => (
+              <div
+                key={item.id}
+              >
+                {item.make}{" "}
+                {item.model}
+              </div>
+            ),
+          )}
+        </div>
+      ),
+    },
 
-  {
-    id: "quantity",
+    {
+      id:
+        "fabrication",
 
-    header: "Qty",
+      header:
+        "Fabrication No.",
 
-    cell: ({ row }) => (
-      <Badge variant="secondary">
-        {row.original.lineItems.reduce(
-          (sum, item) => sum + item.qty,
-          0
-        )}
-      </Badge>
-    ),
-  },
+      cell: ({
+        row,
+      }) => (
+        <div className="space-y-1">
+          {row.original.lineItems.map(
+            (item) => (
+              <div
+                key={item.id}
+              >
+                {item.fabricationNo}
+              </div>
+            ),
+          )}
+        </div>
+      ),
+    },
 
-  {
-    id: "actions",
+    {
+      id:
+        "quantity",
 
-    header: "",
+      header:
+        "Qty",
 
-    enableSorting: false,
+      cell: ({
+        row,
+      }) => (
+        <Badge
+          variant="secondary"
+        >
+          {row.original.lineItems.reduce(
+            (
+              total,
+              item,
+            ) =>
+              total +
+              item.qty,
+            0,
+          )}
+        </Badge>
+      ),
+    },
 
-    cell: ({ row }) => (
-      <InstallationTableActions
-        reportId={row.original.id}
-        onDelete={onDelete}
-      />
-    ),
-  },
-];
+    {
+      id:
+        "actions",
+
+      header:
+        "",
+
+      enableSorting:
+        false,
+
+      cell: ({
+        row,
+      }) => (
+        <InstallationTableActions
+          reportId={
+            row.original.id
+          }
+        />
+      ),
+    },
+  ];

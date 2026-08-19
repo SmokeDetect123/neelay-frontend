@@ -1,59 +1,70 @@
 "use client";
 
 import {
-  useMutation,
-  useQueryClient,
+    useMutation,
+    useQueryClient,
 } from "@tanstack/react-query";
 
 import { toast } from "sonner";
 
-import {
-  calibrationReportService,
-} from "../services";
+import { calibrationReportApi } from "../api";
 
-import {
-  CalibrationReport,
-  CreateCalibrationReportRequest,
+import type {
+    CalibrationReport,
+    CreateCalibrationReportRequest,
 } from "../types";
 
 export function useCreateCalibrationReport() {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  return useMutation<
-    CalibrationReport,
-    Error,
-    CreateCalibrationReportRequest
-  >({
-    mutationFn: (request) =>
-      calibrationReportService.createCalibrationReport(
-        request
-      ),
+    return useMutation<
+        CalibrationReport,
+        Error,
+        CreateCalibrationReportRequest
+    >({
+        mutationFn: (request) =>
+            calibrationReportApi.createReport(request),
 
-    onSuccess: (createdReport) => {
-      queryClient.setQueryData(
-        ["calibration-report", createdReport.id],
-        createdReport
-      );
+        onSuccess: (createdReport) => {
+            /**
+             * Cache the newly created report.
+             */
+            queryClient.setQueryData(
+                [
+                    "calibration-report",
+                    createdReport.id,
+                ],
+                createdReport,
+            );
 
-      queryClient.setQueryData<CalibrationReport[]>(
-        ["calibration-reports"],
-        (old = []) => [...old, createdReport]
-      );
+            /**
+             * Refresh the calibration report list.
+             */
+            queryClient.invalidateQueries({
+                queryKey: [
+                    "calibration-reports",
+                ],
+            });
 
-      queryClient.invalidateQueries({
-        queryKey: ["calibration-report-statistics"],
-      });
+            /**
+             * Refresh statistics.
+             */
+            queryClient.invalidateQueries({
+                queryKey: [
+                    "calibration-report-statistics",
+                ],
+            });
 
-      toast.success(
-        "Calibration report created successfully."
-      );
-    },
+            toast.success(
+                `Calibration report ${createdReport.reportNo} created successfully.`,
+            );
+        },
 
-    onError: (error) => {
-      toast.error(
-        error.message ??
-          "Failed to create calibration report."
-      );
-    },
-  });
+        onError: (error) => {
+            toast.error(
+                error.message ||
+                    "Failed to create calibration report.",
+            );
+        },
+    });
 }

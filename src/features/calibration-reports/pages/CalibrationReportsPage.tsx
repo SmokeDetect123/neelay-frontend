@@ -6,7 +6,6 @@ import Link from "next/link";
 import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-
 import { ContentCard } from "@/components/common/ContentCard";
 import { PageContainer } from "@/components/common/PageContainer";
 import { PageHeader } from "@/components/common/PageHeader";
@@ -16,8 +15,8 @@ import CalibrationReportsTable from "../components/CalibrationReportsTable";
 import CalibrationReportStatistics from "../components/CalibrationReportStatistics";
 
 import {
-  CalibrationReportsErrorState,
-  CalibrationReportsNoResults,
+    CalibrationReportsErrorState,
+    CalibrationReportsNoResults,
 } from "../states";
 
 import { useCalibrationReports } from "../hooks";
@@ -25,103 +24,100 @@ import { useCalibrationReports } from "../hooks";
 import { CalibrationStatus } from "../types";
 
 export default function CalibrationReportsPage() {
-  const {
-    data,
-    isLoading,
-    error,
-  } = useCalibrationReports();
+    const {
+        data,
+        isLoading,
+        error,
+    } = useCalibrationReports();
 
-  /*
-   * The backend returns a Spring Page:
-   *
-   * {
-   *   content: CalibrationReport[],
-   *   totalElements: number,
-   *   totalPages: number,
-   *   number: number,
-   *   size: number,
-   *   first: boolean,
-   *   last: boolean
-   * }
-   *
-   * The actual reports are therefore inside `data.content`.
-   */
-  const reports = data ?? [];
+    /*
+     * The backend returns a paginated CalibrationReportPage.
+     *
+     * The actual reports are stored in:
+     *
+     * data.content
+     *
+     * If the request has not completed yet, use an empty array.
+     */
+    const reports = data?.content ?? [];
 
-  const [search, setSearch] = useState("");
+    const [search, setSearch] = useState("");
 
-  const [status, setStatus] = useState<
-    CalibrationStatus | "ALL"
-  >("ALL");
+    const [status, setStatus] = useState<
+        CalibrationStatus | "ALL"
+    >("ALL");
 
-  /**
-   * Filter the actual report array.
-   */
-  const filteredReports = useMemo(() => {
-    const query = search.trim().toLowerCase();
+    const filteredReports = useMemo(() => {
+        const query = search.trim().toLowerCase();
 
-    return reports.filter((report) => {
-      const matchesSearch =
-        query.length === 0 ||
-        report.reportNo.toLowerCase().includes(query) ||
-        report.customerName.toLowerCase().includes(query) ||
-        report.serialNo.toLowerCase().includes(query);
+        return reports.filter((report) => {
+            const matchesSearch =
+                query.length === 0 ||
+                report.reportNo
+                    .toLowerCase()
+                    .includes(query) ||
+                report.customerName
+                    .toLowerCase()
+                    .includes(query) ||
+                report.serialNo
+                    .toLowerCase()
+                    .includes(query);
 
-      const matchesStatus =
-        status === "ALL" ||
-        report.status === status;
+            const matchesStatus =
+                status === "ALL" ||
+                report.status === status;
 
-      return matchesSearch && matchesStatus;
-    });
-  }, [reports, search, status]);
+            return matchesSearch && matchesStatus;
+        });
+    }, [reports, search, status]);
 
-  return (
-    <PageContainer>
-      <PageHeader
-        title="Calibration Reports"
-        description="Create, manage and track calibration reports."
-        actions={
-          <Button asChild>
-            <Link href="/calibration-reports/create">
-              <Plus className="mr-2 h-4 w-4" />
-              Create Report
-            </Link>
-          </Button>
-        }
-      />
+    return (
+        <PageContainer>
+            <PageHeader
+                title="Calibration Reports"
+                description="Create, manage and track calibration reports."
+                actions={
+                    <Button asChild>
+                        <Link href="/calibration-reports/create">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Create Report
+                        </Link>
+                    </Button>
+                }
+            />
 
-      <CalibrationReportStatistics
-        reports={filteredReports}
-      />
+            <CalibrationReportStatistics
+                reports={filteredReports}
+            />
 
-      <CalibrationReportsFilters
-        search={search}
-        status={status}
-        onSearchChange={setSearch}
-        onStatusChange={setStatus}
-      />
+            <CalibrationReportsFilters
+                search={search}
+                status={status}
+                onSearchChange={setSearch}
+                onStatusChange={setStatus}
+            />
 
-      <ContentCard className="p-6">
-        {error ? (
-          <CalibrationReportsErrorState
-            message={
-              error instanceof Error
-                ? error.message
-                : "Unable to load calibration reports."
-            }
-          />
-        ) : filteredReports.length === 0 &&
-          search.trim() !== "" ? (
-          <CalibrationReportsNoResults
-            search={search}
-          />
-        ) : (
-          <CalibrationReportsTable
-            reports={filteredReports}
-            loading={isLoading}
-          />
-        )}
-      </ContentCard>
-    </PageContainer>
-  );
+            <ContentCard className="p-6">
+                {error ? (
+                    <CalibrationReportsErrorState
+                        message={
+                            error instanceof Error
+                                ? error.message
+                                : "Unable to load calibration reports."
+                        }
+                    />
+                ) : filteredReports.length === 0 &&
+                  search.trim() !== "" ? (
+                    <CalibrationReportsNoResults
+                        search={search}
+                    />
+                ) : (
+                    <CalibrationReportsTable
+                        reports={filteredReports}
+                        loading={isLoading}
+                    />
+                )}
+            </ContentCard>
+        </PageContainer>
+    );
 }

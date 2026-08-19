@@ -1,86 +1,200 @@
 import {
-  InstallationFilter,
   InstallationReport,
   CreateInstallationReportRequest,
   UpdateInstallationReportRequest,
 } from "../types";
 
-import {
-  installationReportService,
-} from "../services";
+import { apiClient } from "@/services/api-client";
+
+const INSTALLATION_REPORTS_ENDPOINT =
+  "/installation-reports";
+
+/**
+ * Query parameters accepted by:
+ *
+ * GET /api/installation-reports/search
+ *
+ * These properties are optional because an empty search
+ * request is valid.
+ */
+export interface InstallationReportSearchParams {
+  reportNo?: string;
+  customerName?: string;
+  make?: string;
+  fabricationNo?: string;
+  fromDate?: string;
+  toDate?: string;
+
+  page?: number;
+  size?: number;
+  sort?: string | string[];
+}
+
+/**
+ * Spring Data Page response.
+ */
+export interface InstallationReportPage {
+  content: InstallationReport[];
+
+  totalElements: number;
+  totalPages: number;
+
+  size: number;
+  number: number;
+  numberOfElements: number;
+
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+}
 
 class InstallationReportApi {
   /**
-   * Returns every installation report.
-   */
-  async getReports(): Promise<
-    InstallationReport[]
-  > {
-    return installationReportService.getInstallationReports();
-  }
-
-  /**
-   * Returns a single report.
-   */
-  async getReport(
-    id: number
-  ): Promise<
-    InstallationReport | null
-  > {
-    return installationReportService.getInstallationReportById(
-      id
-    );
-  }
-
-  /**
-   * Creates a report.
+   * Creates an installation report.
    */
   async createReport(
-    request: CreateInstallationReportRequest
-  ): Promise<
-    InstallationReport
-  > {
-    return installationReportService.createInstallationReport(
-      request
+    request: CreateInstallationReportRequest,
+  ): Promise<InstallationReport> {
+    return apiClient.post<
+      InstallationReport,
+      CreateInstallationReportRequest
+    >(
+      INSTALLATION_REPORTS_ENDPOINT,
+      request,
     );
   }
 
   /**
-   * Updates a report.
+   * Returns a single installation report.
+   */
+  async getReport(
+    id: number,
+  ): Promise<InstallationReport> {
+    return apiClient.get<InstallationReport>(
+      `${INSTALLATION_REPORTS_ENDPOINT}/${id}`,
+    );
+  }
+
+  /**
+   * Returns installation reports for the requested page.
+   *
+   * The backend search endpoint is used even when
+   * there are no filters.
+   */
+  async getReports(
+    page = 0,
+    size = 10,
+  ): Promise<InstallationReport[]> {
+    const response =
+      await this.searchReports({
+        page,
+        size,
+      });
+
+    return response.content;
+  }
+
+  /**
+   * Updates an installation report.
    */
   async updateReport(
     id: number,
-    request: UpdateInstallationReportRequest
-  ): Promise<
-    InstallationReport | null
-  > {
-    return installationReportService.updateInstallationReport(
-      id,
-      request
+    request: UpdateInstallationReportRequest,
+  ): Promise<InstallationReport> {
+    return apiClient.put<
+      InstallationReport,
+      UpdateInstallationReportRequest
+    >(
+      `${INSTALLATION_REPORTS_ENDPOINT}/${id}`,
+      request,
     );
   }
 
   /**
-   * Deletes a report.
-   */
-  async deleteReport(
-    id: number
-  ): Promise<boolean> {
-    return installationReportService.deleteInstallationReport(
-      id
-    );
-  }
-
-  /**
-   * Searches reports.
+   * Searches installation reports.
+   *
+   * All search fields are optional because the backend
+   * accepts an empty search request.
    */
   async searchReports(
-    filter: InstallationFilter
-  ): Promise<
-    InstallationReport[]
-  > {
-    return installationReportService.searchInstallationReports(
-      filter
+    filter: InstallationReportSearchParams = {},
+  ): Promise<InstallationReportPage> {
+    const params = new URLSearchParams();
+
+    const {
+      reportNo,
+      customerName,
+      make,
+      fabricationNo,
+      fromDate,
+      toDate,
+      page = 0,
+      size = 10,
+      sort = "createdAt,desc",
+    } = filter;
+
+    params.set(
+      "page",
+      String(page),
+    );
+
+    params.set(
+      "size",
+      String(size),
+    );
+
+    if (Array.isArray(sort)) {
+      for (const value of sort) {
+        params.append("sort", value);
+      }
+    } else if (sort) {
+      params.set("sort", sort);
+    }
+
+    if (reportNo?.trim()) {
+      params.set(
+        "reportNo",
+        reportNo.trim(),
+      );
+    }
+
+    if (customerName?.trim()) {
+      params.set(
+        "customerName",
+        customerName.trim(),
+      );
+    }
+
+    if (make?.trim()) {
+      params.set(
+        "make",
+        make.trim(),
+      );
+    }
+
+    if (fabricationNo?.trim()) {
+      params.set(
+        "fabricationNo",
+        fabricationNo.trim(),
+      );
+    }
+
+    if (fromDate) {
+      params.set(
+        "fromDate",
+        fromDate,
+      );
+    }
+
+    if (toDate) {
+      params.set(
+        "toDate",
+        toDate,
+      );
+    }
+
+    return apiClient.get<InstallationReportPage>(
+      `${INSTALLATION_REPORTS_ENDPOINT}/search?${params.toString()}`,
     );
   }
 }

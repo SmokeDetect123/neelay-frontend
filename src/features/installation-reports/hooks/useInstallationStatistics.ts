@@ -13,46 +13,43 @@ import {
 export function useInstallationStatistics(): InstallationStatistics {
   const {
     data = [],
-  } =
-    useInstallationReports();
+  } = useInstallationReports();
+
+  const reports = data;
 
   return useMemo(
     () => ({
       totalReports:
-        data.length,
+        reports.length,
 
       totalLineItems:
-        data.reduce(
+        reports.reduce(
           (
             total,
-            report
+            report,
           ) =>
             total +
             report.lineItems.length,
-          0
+          0,
         ),
 
       uniqueCustomers:
         new Set(
-          data.map(
-            (
-              report
-            ) =>
-              report.customerName
-          )
+          reports.map(
+            (report) =>
+              report.customerName,
+          ),
         ).size,
 
       reportsThisMonth:
-        data.filter(
-          (
-            report
-          ) => {
+        reports.filter(
+          (report) => {
             const today =
               new Date();
 
             const reportDate =
               new Date(
-                report.reportDate
+                report.reportDate,
               );
 
             return (
@@ -61,9 +58,9 @@ export function useInstallationStatistics(): InstallationStatistics {
               reportDate.getFullYear() ===
                 today.getFullYear()
             );
-          }
+          },
         ).length,
     }),
-    [data]
+    [reports],
   );
 }

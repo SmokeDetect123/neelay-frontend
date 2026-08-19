@@ -9,17 +9,28 @@ import type {
     UpdateServiceReportRequest,
 } from "../types/serviceReport.types";
 
+/**
+ * Service Report API service.
+ *
+ * This class contains all HTTP communication for
+ * the Service Reports feature.
+ *
+ * Components and hooks must not call Axios directly.
+ */
 class ServiceReportService {
     /**
      * Fetch paginated Service Reports.
      *
      * Backend:
+     *
      * GET /api/service-reports?page=0&size=10
      */
     async getServiceReports(
         page = 0,
         size = 10,
-    ): Promise<PageResponse<ServiceReportResponse>> {
+    ): Promise<
+        PageResponse<ServiceReportResponse>
+    > {
         return apiClient.get<
             PageResponse<ServiceReportResponse>
         >(
@@ -34,9 +45,10 @@ class ServiceReportService {
     }
 
     /**
-     * Fetch one Service Report.
+     * Fetch a single Service Report.
      *
      * Backend:
+     *
      * GET /api/service-reports/{id}
      */
     async getServiceReportById(
@@ -50,15 +62,17 @@ class ServiceReportService {
     /**
      * Create a Service Report.
      *
-     * Backend generates:
+     * Backend:
+     *
+     * POST /api/service-reports
+     *
+     * Server-generated fields:
+     *
      * - id
      * - reportNo
      * - createdById
      * - createdAt
      * - updatedAt
-     *
-     * Backend:
-     * POST /api/service-reports
      */
     async createServiceReport(
         request: CreateServiceReportRequest,
@@ -76,6 +90,7 @@ class ServiceReportService {
      * Update an existing Service Report.
      *
      * Backend:
+     *
      * PUT /api/service-reports/{id}
      */
     async updateServiceReport(
@@ -95,13 +110,23 @@ class ServiceReportService {
      * Search Service Reports.
      *
      * Backend:
+     *
      * GET /api/service-reports/search
+     *
+     * Supported query parameters:
+     *
+     * - customerName
+     * - reportNo
+     * - fromDate
+     * - toDate
      */
     async searchServiceReports(
         request: ServiceReportSearchRequest,
         page = 0,
         size = 10,
-    ): Promise<PageResponse<ServiceReportResponse>> {
+    ): Promise<
+        PageResponse<ServiceReportResponse>
+    > {
         return apiClient.get<
             PageResponse<ServiceReportResponse>
         >(

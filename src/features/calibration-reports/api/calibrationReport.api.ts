@@ -2,62 +2,43 @@ import { apiClient } from "@/services/api-client";
 
 import type {
     CalibrationReport,
-} from "../types/calibration-report.types";
-
-import type {
+    CalibrationReportPage,
     CreateCalibrationReportRequest,
-    UpdateCalibrationReportRequest,
-} from "../types/calibration-request.types";
+} from "../types";
 
 export interface CalibrationReportListParams {
     page?: number;
     size?: number;
 }
 
-interface CalibrationReportPageResponse {
-    content: CalibrationReport[];
-    totalElements: number;
-    totalPages: number;
-    number: number;
-    size: number;
-    first: boolean;
-    last: boolean;
-}
-
-/**
- * Calibration Report API
- *
- * Backend endpoints:
- *
- * POST /api/calibration-reports
- * GET  /api/calibration-reports/{id}
- * GET  /api/calibration-reports?page={page}&size={size}
- * PUT  /api/calibration-reports/{id}
- */
 export const calibrationReportApi = {
     /**
-     * Get calibration reports.
+     * GET /api/calibration-reports
      *
-     * The backend returns a Spring Page object.
-     * The existing frontend report list expects an array,
-     * so only the `content` array is returned here.
+     * Returns the paginated calibration report response
+     * from the backend.
      */
     async getReports(
         params: CalibrationReportListParams = {},
-    ): Promise<CalibrationReport[]> {
+    ): Promise<CalibrationReportPage> {
         const page = params.page ?? 0;
         const size = params.size ?? 10;
 
-        const response =
-            await apiClient.get<CalibrationReportPageResponse>(
-                `/calibration-reports?page=${page}&size=${size}`,
-            );
-
-        return response.content;
+        return apiClient.get<CalibrationReportPage>(
+            "/calibration-reports",
+            {
+                params: {
+                    page,
+                    size,
+                },
+            },
+        );
     },
 
     /**
-     * Get a single calibration report by ID.
+     * GET /api/calibration-reports/{id}
+     *
+     * Returns a single calibration report.
      */
     async getReportById(
         id: number,
@@ -68,7 +49,9 @@ export const calibrationReportApi = {
     },
 
     /**
-     * Create a calibration report.
+     * POST /api/calibration-reports
+     *
+     * Creates a new calibration report.
      */
     async createReport(
         request: CreateCalibrationReportRequest,
@@ -78,22 +61,6 @@ export const calibrationReportApi = {
             CreateCalibrationReportRequest
         >(
             "/calibration-reports",
-            request,
-        );
-    },
-
-    /**
-     * Update a calibration report.
-     */
-    async updateReport(
-        id: number,
-        request: UpdateCalibrationReportRequest,
-    ): Promise<CalibrationReport> {
-        return apiClient.put<
-            CalibrationReport,
-            UpdateCalibrationReportRequest
-        >(
-            `/calibration-reports/${id}`,
             request,
         );
     },

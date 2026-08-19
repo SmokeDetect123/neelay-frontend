@@ -29,7 +29,11 @@ export const calibrationReportTemplate: Omit<
 
   testSignature: "Calibration Test Completed",
 
+  status: CalibrationStatus.PASS,
+
   testSignatureUrl: "",
+
+  testSignatureDate: undefined,
 
   carriedGas: "Oxygen",
 
@@ -87,5 +91,4 @@ export const calibrationReportTemplate: Omit<
 
   updatedAt: "2026-08-04T09:30:00",
 
-  status: CalibrationStatus.PASS,
 };

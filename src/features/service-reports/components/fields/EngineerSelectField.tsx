@@ -1,83 +1,16 @@
 "use client";
 
-import { useFormContext } from "react-hook-form";
-
-import {
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form";
-
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-
-import { RequiredLabel } from "@/components/forms/RequiredLabel";
-
-import { useUsers } from "@/features/users/hooks/useUsers";
-
-import type { ServiceReportFormValues } from "../../types/serviceReportForm.types";
-
+/**
+ * Service Reports currently use the authenticated backend user
+ * as createdBy.
+ *
+ * The current CreateServiceReportRequest does not contain an
+ * attendedBy field, so there is no engineer-selection form field
+ * to bind here.
+ *
+ * This component intentionally renders nothing until engineer
+ * assignment is introduced into the Service Report API contract.
+ */
 export default function EngineerSelectField() {
-    const form =
-        useFormContext<ServiceReportFormValues>();
-
-    const { users } = useUsers();
-
-    return (
-        <FormField
-            control={form.control}
-            name="attendedBy"
-            render={({ field }) => (
-                <FormItem>
-                    <FormLabel>
-                        <RequiredLabel>
-                            Engineer
-                        </RequiredLabel>
-                    </FormLabel>
-
-                    <Select
-                        value={
-                            field.value
-                                ? field.value.toString()
-                                : ""
-                        }
-                        onValueChange={(value) =>
-                            field.onChange(
-                                Number(value),
-                            )
-                        }
-                        onOpenChange={() => {
-                            field.onBlur();
-                        }}
-                    >
-                        <FormControl>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select engineer" />
-                            </SelectTrigger>
-                        </FormControl>
-
-                        <SelectContent>
-                            {users.map((user) => (
-                                <SelectItem
-                                    key={user.id}
-                                    value={user.id.toString()}
-                                >
-                                    {user.fullName}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-
-                    <FormMessage />
-                </FormItem>
-            )}
-        />
-    );
+    return null;
 }

@@ -18,13 +18,14 @@ import type {
 } from "../types/serviceReport.types";
 
 export function useServiceReports() {
-    const [reports, setReports] = useState<
-        ServiceReportResponse[]
-    >([]);
+    const [reports, setReports] =
+        useState<ServiceReportResponse[]>([]);
 
-    const [page, setPage] = useState(0);
+    const [page, setPage] =
+        useState(0);
 
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] =
+        useState(10);
 
     const [totalElements, setTotalElements] =
         useState(0);
@@ -46,21 +47,34 @@ export function useServiceReports() {
             setLoading(true);
 
             try {
-                const response: PageResponse<ServiceReportResponse> =
-                    await serviceReportService.getServiceReports(
-                        requestedPage,
-                        requestedSize,
-                    );
+                const response:
+                    PageResponse<ServiceReportResponse> =
+                    await serviceReportService
+                        .getServiceReports(
+                            requestedPage,
+                            requestedSize,
+                        );
 
-                setReports(response.content);
-                setPage(response.number);
-                setPageSize(response.size);
+                setReports(
+                    response.content,
+                );
+
+                setPage(
+                    response.number,
+                );
+
+                setPageSize(
+                    response.size,
+                );
+
                 setTotalElements(
                     response.totalElements,
                 );
+
                 setTotalPages(
                     response.totalPages,
                 );
+
                 setError(undefined);
             } catch (err) {
                 setError(
@@ -72,16 +86,55 @@ export function useServiceReports() {
                 setLoading(false);
             }
         },
-        [page, pageSize],
+        [
+            page,
+            pageSize,
+        ],
     );
 
     useEffect(() => {
         void loadReports();
     }, [loadReports]);
 
-    const refresh = useCallback(async () => {
-        await loadReports(page, pageSize);
-    }, [loadReports, page, pageSize]);
+    const refresh = useCallback(
+        async () => {
+            await loadReports(
+                page,
+                pageSize,
+            );
+        },
+        [
+            loadReports,
+            page,
+            pageSize,
+        ],
+    );
+
+    const goToPage = useCallback(
+        async (
+            nextPage: number,
+        ) => {
+            if (
+                nextPage < 0 ||
+                (
+                    totalPages > 0 &&
+                    nextPage >= totalPages
+                )
+            ) {
+                return;
+            }
+
+            await loadReports(
+                nextPage,
+                pageSize,
+            );
+        },
+        [
+            loadReports,
+            pageSize,
+            totalPages,
+        ],
+    );
 
     const getServiceReportById =
         useCallback(
@@ -105,11 +158,18 @@ export function useServiceReports() {
                             request,
                         );
 
-                await loadReports(page, pageSize);
+                await loadReports(
+                    page,
+                    pageSize,
+                );
 
                 return report;
             },
-            [loadReports, page, pageSize],
+            [
+                loadReports,
+                page,
+                pageSize,
+            ],
         );
 
     const updateServiceReport =
@@ -125,36 +185,19 @@ export function useServiceReports() {
                             request,
                         );
 
-                await loadReports(page, pageSize);
+                await loadReports(
+                    page,
+                    pageSize,
+                );
 
                 return report;
             },
-            [loadReports, page, pageSize],
-        );
-
-    const goToPage = useCallback(
-        async (nextPage: number) => {
-            if (
-                nextPage < 0 ||
-                (
-                    totalPages > 0 &&
-                    nextPage >= totalPages
-                )
-            ) {
-                return;
-            }
-
-            await loadReports(
-                nextPage,
+            [
+                loadReports,
+                page,
                 pageSize,
-            );
-        },
-        [
-            loadReports,
-            pageSize,
-            totalPages,
-        ],
-    );
+            ],
+        );
 
     return {
         reports,

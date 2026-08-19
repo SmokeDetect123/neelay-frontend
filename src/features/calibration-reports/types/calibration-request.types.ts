@@ -1,10 +1,18 @@
 /**
  * ============================================================================
- * Mirrors CreateCalibrationReportRequest.java
- * Backend request contract
+ * Base Calibration Report Request
  * ============================================================================
+ *
+ * Mirrors the backend CreateCalibrationReportRequest contract.
+ *
+ * These fields intentionally use strings for:
+ * - agentType
+ * - fillingSystem
+ * - connectorSystem
+ * - carriedGas
+ *
+ * The backend accepts these values as strings.
  */
-
 export interface CalibrationReportRequest {
   reportDate: string;
 
@@ -37,14 +45,23 @@ export interface CalibrationReportRequest {
   // --------------------------------------------------------------------------
 
   test1Record000?: number;
+
   test1Record060?: number;
+
   test1Record100?: number;
+
   test1Record200?: number;
+
   test1Record300?: number;
+
   test1Record400?: number;
+
   test1Record500?: number;
+
   test1Record600?: number;
+
   test1Record700?: number;
+
   test1Record800?: number;
 
   // --------------------------------------------------------------------------
@@ -52,15 +69,28 @@ export interface CalibrationReportRequest {
   // --------------------------------------------------------------------------
 
   test2Record000?: number;
+
   test2Record060?: number;
+
   test2Record100?: number;
+
   test2Record200?: number;
+
   test2Record300?: number;
+
   test2Record400?: number;
+
   test2Record500?: number;
+
   test2Record600?: number;
+
   test2Record700?: number;
+
   test2Record800?: number;
+
+  // --------------------------------------------------------------------------
+  // Results
+  // --------------------------------------------------------------------------
 
   resistance4lmin?: number;
 
@@ -74,6 +104,10 @@ export interface CalibrationReportRequest {
 
   overallComment?: string;
 
+  // --------------------------------------------------------------------------
+  // Signatures
+  // --------------------------------------------------------------------------
+
   biomedicalEngineerSignatureUrl?: string;
 
   serviceEngineerSignatureUrl?: string;
@@ -83,18 +117,16 @@ export interface CalibrationReportRequest {
 
 /**
  * ============================================================================
- * POST /calibration-reports
+ * POST /api/calibration-reports
  * ============================================================================
  */
-
 export interface CreateCalibrationReportRequest
   extends CalibrationReportRequest {}
 
 /**
  * ============================================================================
- * PUT /calibration-reports/{id}
+ * PUT /api/calibration-reports/{id}
  * ============================================================================
  */
-
 export interface UpdateCalibrationReportRequest
   extends Partial<CalibrationReportRequest> {}
