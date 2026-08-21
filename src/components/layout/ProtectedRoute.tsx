@@ -1,9 +1,15 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import {
+    ReactNode,
+    useEffect,
+    useState,
+} from "react";
+
 import { useRouter } from "next/navigation";
 
 import FullScreenLoader from "@/components/common/FullScreenLoader";
+
 import { ROUTES } from "@/constants/routes";
 import { TokenStorage } from "@/utils/token";
 
@@ -16,16 +22,30 @@ export default function ProtectedRoute({
 }: ProtectedRouteProps) {
     const router = useRouter();
 
-    const auth = TokenStorage.get();
+    const [checkingAuth, setCheckingAuth] =
+        useState(true);
+
+    const [authenticated, setAuthenticated] =
+        useState(false);
 
     useEffect(() => {
-        if (!auth) {
-            router.replace(ROUTES.LOGIN);
-        }
-    }, [auth, router]);
+        const auth = TokenStorage.get();
 
-    if (!auth) {
+        if (!auth?.token) {
+            router.replace(ROUTES.LOGIN);
+            return;
+        }
+
+        setAuthenticated(true);
+        setCheckingAuth(false);
+    }, [router]);
+
+    if (checkingAuth) {
         return <FullScreenLoader />;
+    }
+
+    if (!authenticated) {
+        return null;
     }
 
     return <>{children}</>;
